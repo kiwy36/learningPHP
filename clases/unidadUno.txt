@@ -1,95 +1,233 @@
 UNIDAD 1 – INTRODUCCIÓN A BASES DE DATOS Y MYSQL
 
 1.1 ¿Qué es una base de datos?
+Una base de datos es un sistema organizado para recopilar, almacenar, manipular y recuperar información de forma eficiente. Imaginá una biblioteca: tiene estantes (estructura), libros (datos), y un sistema de clasificación (índice). Lo mismo ocurre con una base de datos, pero en formato digital. Está compuesta por datos estructurados que pueden ser accedidos, gestionados y actualizados fácilmente por software especializado.
+
+Una base de datos se compone de tablas (en bases de datos relacionales), documentos (en bases no relacionales), o incluso pares clave-valor, dependiendo del tipo. Es utilizada por casi todas las aplicaciones modernas: desde redes sociales, hasta bancos, e-commerce y videojuegos.
+
+Las bases de datos permiten:
+- Evitar duplicación de datos (gracias a la normalización).
+- Acceso rápido a información específica.
+- Seguridad y control de acceso a los datos.
+- Integridad de los datos.
+
+Ejercicio:
+Imaginá que tenés una agenda de contactos. Convertí esa lista en una base de datos simple:
+
+| ID | Nombre        | Teléfono   | Email           |
+|----|---------------|------------|------------------|
+| 1  | Kevin Wittner | 1122334455 | kevin@mail.com   |
+| 2  | Ana Gómez     | 1133445566 | ana@mail.com     |
+
+Preguntas:
+1. ¿Qué ventaja ves en guardar los contactos de esta forma?
+2. ¿Cómo buscarías a alguien por su nombre?
+
+---
 
 1a. Concepto de base de datos
-Una base de datos es un conjunto organizado de información o datos que se almacenan y se acceden electrónicamente desde un sistema informático. Su función es permitir la almacenación, gestión, modificación y recuperación eficiente de datos. Es como una biblioteca digital donde cada registro está clasificado y estructurado para facilitar su búsqueda.
+Una base de datos (BDD) es un conjunto de datos relacionados entre sí, organizados de tal forma que se facilite su acceso, administración y actualización. Está diseñada para ofrecer almacenamiento, acceso eficiente y seguridad para manejar datos de diferentes tipos: textos, números, imágenes, etc.
 
-Las bases de datos pueden contener desde datos personales, productos, usuarios, hasta información médica o financiera. Son esenciales en casi todas las aplicaciones modernas.
+Las bases de datos pueden clasificarse según:
+- Modelo de datos (relacional, documental, jerárquico, etc.)
+- Ubicación (local o en la nube)
+- Acceso (centralizada o distribuida)
 
-Clasificaciones:
-- Por modelo de datos (relacional, no relacional, jerárquico)
-- Por tipo de almacenamiento (local, en la nube)
-- Por escala (personal, empresarial)
-
-Ejercicio:
-1. Lista 5 apps que uses.
-2. Identifica qué tipo de datos almacenan.
-3. ¿Qué pasaría si esos datos estuvieran mal organizados?
-
-Variante:
-Bases de datos temporales o en memoria (como Redis) para caching, que no son permanentes pero mejoran el rendimiento.
-
-1b. Diferencia entre base de datos relacional y no relacional
-Las bases relacionales almacenan datos en tablas, con filas y columnas. Usan SQL y relaciones entre tablas (llaves primarias y foráneas). Ej: MySQL, PostgreSQL.
-
-Las no relacionales (NoSQL) almacenan datos de forma flexible: documentos (MongoDB), claves-valor (Redis), columnas (Cassandra), grafos (Neo4j). Ideales para datos dinámicos y grandes volúmenes.
-
-Diferencias clave:
-- Estructura: Tablas vs Documentos/Claves-valor/etc.
-- Lenguaje: SQL vs Lenguajes específicos
-- Esquema: Rígido vs Flexible
-- Escalabilidad: Vertical vs Horizontal
-
-Ejercicio:
-1. ¿Qué tipo conviene para una app bancaria? ¿Y una red social?
-
-1c. ¿Qué es SQL? ¿Y qué es MySQL?
-SQL (Structured Query Language) es el lenguaje estándar para bases relacionales. Permite crear estructuras, insertar, consultar, modificar y eliminar datos.
+Las más comunes son las bases de datos relacionales, que usan tablas para representar entidades y relaciones. Estas tablas están compuestas por filas (registros) y columnas (campos).
 
 Ejemplo:
-CREATE TABLE Clientes (...);
-INSERT INTO Clientes (...);
-SELECT * FROM Clientes;
+Una base de datos para un ecommerce podría tener estas tablas:
+- Usuarios
+- Productos
+- Pedidos
 
-MySQL es un sistema de gestión de bases relacionales (RDBMS) que usa SQL. Es gratuito, rápido, compatible con muchos lenguajes y ampliamente usado (parte de XAMPP y LAMP).
-
-Ejercicio:
-1. Instalá MySQL o usá db-fiddle.
-2. Creá tabla `usuarios` con `id`, `nombre`, `email`.
-3. Insertá registros y consultalos con SELECT.
-4. Eliminá uno con DELETE.
+Cada tabla tiene relaciones con otras. Por ejemplo, un pedido está relacionado con un usuario y con productos.
 
 Variante:
-Otras RDBMS: PostgreSQL, SQLite, SQL Server, MariaDB.
+- Base de datos en memoria: cargadas directamente en la RAM (por ejemplo, Redis).
+- Base de datos embebida: usada dentro de una app (como SQLite en apps móviles).
+
+Ejercicio:
+Diseñá una base de datos para una veterinaria que incluya:
+- Mascotas (nombre, tipo, edad)
+- Dueños (nombre, teléfono)
+- Consultas (fecha, motivo, mascota)
+
+---
+
+1b. Diferencia entre base de datos relacional y no relacional
+Las bases de datos se clasifican en relacionales y no relacionales, y la diferencia principal está en cómo organizan y acceden a los datos.
+
+Relacionales (SQL):
+- Usan tablas (como hojas de Excel).
+- Se basan en el modelo relacional de E. F. Codd.
+- Usan SQL para consultar los datos.
+- Ejemplo: MySQL, PostgreSQL, Oracle.
+
+Ventajas:
+- Estructura clara y normalización de datos.
+- Relaciones definidas mediante claves primarias y foráneas.
+- Integridad referencial.
+
+Desventajas:
+- Menos flexibles con grandes volúmenes de datos no estructurados.
+- Escalado horizontal más complejo.
+
+No Relacionales (NoSQL):
+- No usan tablas; pueden usar documentos (MongoDB), clave-valor (Redis), grafos (Neo4j).
+- Mayor flexibilidad para almacenar datos semi o no estructurados.
+
+Ventajas:
+- Muy rápidas para lecturas/escrituras en grandes volúmenes.
+- Se escalan fácilmente.
+- Ideales para big data, redes sociales, apps en tiempo real.
+
+Desventajas:
+- No garantizan integridad referencial como las relacionales.
+- No siempre son adecuadas para relaciones complejas.
+
+Ejercicio:
+Dado un sistema de usuarios que tiene publicaciones, ¿cómo modelarías eso en:
+- Una base relacional (con tablas)?
+- Una base no relacional (con documentos JSON)?
+
+---
+
+1c. ¿Qué es SQL? ¿Y qué es MySQL?
+SQL (Structured Query Language)
+SQL es el lenguaje estándar para gestionar y manipular bases de datos relacionales. Permite realizar operaciones como:
+- CREAR bases y tablas.
+- INSERTAR nuevos registros.
+- LEER datos (consultas SELECT).
+- ACTUALIZAR registros.
+- BORRAR datos.
+
+Ejemplo básico:
+SELECT nombre FROM usuarios WHERE edad > 18;
+
+SQL está estandarizado pero tiene dialectos: MySQL, PostgreSQL, SQL Server, entre otros.
+
+MySQL
+Es un sistema gestor de bases de datos (SGBD) de código abierto que usa SQL como lenguaje principal. Fue creado en 1995 y actualmente es mantenido por Oracle. Es uno de los gestores más populares en el mundo por su facilidad, rendimiento y licencia libre.
+
+Características de MySQL:
+- Rápido y eficiente.
+- Compatible con múltiples lenguajes (PHP, Python, Java, etc.).
+- Uso común en servidores web (por ejemplo, con PHP y Apache).
+
+Ejercicio:
+1. Escribí una consulta SQL que:
+   - Cree una tabla de productos con nombre, precio y stock.
+   - Inserte tres productos.
+   - Liste todos los productos con stock mayor a 10.
+
+Código:
+
+CREATE TABLE productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(50),
+  precio DECIMAL(10,2),
+  stock INT
+);
+
+INSERT INTO productos (nombre, precio, stock)
+VALUES ('Laptop', 1500.00, 20),
+       ('Mouse', 15.99, 50),
+       ('Teclado', 35.00, 5);
+
+SELECT * FROM productos WHERE stock > 10;
+/////////////////////////////////////////////////////////////
 
 UNIDAD 1.2 – HERRAMIENTAS PARA USAR MYSQL
 
 1a. Instalación de XAMPP y acceso a PHPMyAdmin
-XAMPP incluye Apache, MySQL, PHP y Perl. Permite montar un servidor local fácilmente.
+XAMPP es un paquete que incluye Apache (servidor web), MySQL (MariaDB), PHP y PHPMyAdmin, ideal para desarrollo local. Funciona en Windows, Linux y Mac.
 
-Pasos:
-1. Descargar desde apachefriends.org
-2. Instalar y abrir XAMPP Control Panel
-3. Iniciar Apache y MySQL
-4. Acceder a http://localhost/phpmyadmin
+Pasos de instalación:
+1. Descargar XAMPP desde https://www.apachefriends.org
+2. Ejecutar el instalador.
+3. Seleccionar Apache, MySQL, PHP, PHPMyAdmin.
+4. Finalizar instalación y abrir el XAMPP Control Panel.
+5. Iniciar Apache y MySQL.
 
-PHPMyAdmin es una herramienta visual para administrar MySQL desde el navegador.
+Acceso a PHPMyAdmin:
+- Abrir navegador y acceder a http://localhost/phpmyadmin
+- Desde aquí podés administrar tus bases de datos de forma visual.
 
 Ejercicio:
-1. Instalá XAMPP y accedé a PHPMyAdmin.
-2. Creá base de datos `ejemplo`.
+1. Instalá XAMPP.
+2. Iniciá Apache y MySQL.
+3. Accedé a http://localhost/phpmyadmin
+4. Explorá sus secciones: Bases de datos, SQL, Exportar, etc.
+
+---
 
 1b. Consola de comandos vs entorno visual (PHPMyAdmin)
-- Consola: Mayor control, rápida, usada en producción.
-- Visual (PHPMyAdmin): Intuitiva, ideal para principiantes.
+
+Entorno visual (PHPMyAdmin):
+- Interfaz gráfica vía navegador.
+- Crear bases, insertar datos, consultar fácilmente.
+- Ideal para principiantes.
+
+Ventajas:
+- Rápido, simple.
+- No requiere escribir código.
+
+Desventajas:
+- Menos flexible para tareas complejas.
+
+Consola de comandos (CLI):
+- Interacción directa con MySQL usando comandos SQL.
+- Más potente y rápido para tareas avanzadas.
+
+Ventajas:
+- Mayor control.
+- Ideal para scripts automatizados.
+
+Desventajas:
+- Menor accesibilidad para novatos.
 
 Ejercicio:
-1. Crear tabla `productos` en PHPMyAdmin.
-2. Consultarla desde consola usando comandos SQL (`SHOW DATABASES`, `USE`, `SELECT`, etc).
+1. Desde consola MySQL:
+CREATE DATABASE tienda;
+USE tienda;
+CREATE TABLE productos (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(50),
+  precio DECIMAL(10,2)
+);
+2. Luego creá la misma base desde PHPMyAdmin.
+
+Compará: ¿qué te resultó más cómodo o más rápido?
+
+---
 
 1c. Crear tu primera base de datos
-Concepto: Una base de datos contiene tablas, que a su vez contienen registros. Primero se crea la base y luego las tablas.
-
-Desde PHPMyAdmin:
-1. Ir a "Base de datos", crear `tienda`, usar utf8_general_ci.
 
 Desde consola:
-1. mysql -u root -p
-2. CREATE DATABASE tienda;
-3. USE tienda;
-4. CREATE TABLE productos (...);
+CREATE DATABASE mi_primera_bd;
+USE mi_primera_bd;
+
+CREATE TABLE usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100),
+  email VARCHAR(100),
+  edad INT
+);
+
+INSERT INTO usuarios (nombre, email, edad)
+VALUES ('Kevin Wittner', 'kevin@mail.com', 25),
+       ('Ana Gómez', 'ana@mail.com', 30);
+
+Desde PHPMyAdmin:
+1. Ir a http://localhost/phpmyadmin
+2. Crear base: “mi_primera_bd”
+3. Crear tabla: “usuarios” con campos id, nombre, email, edad
+4. Insertar registros manualmente
 
 Ejercicio:
-1. Crear base `escuela` con tabla `alumnos` (`id`, `nombre`, `email`, `fecha_nacimiento`).
-2. Insertar 2 registros en PHPMyAdmin y 2 desde consola.
+1. Crear base “escuela”
+2. Crear tabla “alumnos” con campos: id, nombre, apellido, curso, nota
+3. Insertar 3 alumnos
+4. Consultar alumnos con nota > 7:
+SELECT * FROM alumnos WHERE nota > 7;
