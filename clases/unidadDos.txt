@@ -1,7 +1,3 @@
-Perfecto, Kevin. Acá tenés toda la explicación completa de la **UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS** (sección 2.1) con ejemplos y ejercicios, como pediste, sin el archivo `.txt`:
-
----
-
 ## 🟦 UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS
 
 ### 2.1 CREAR TABLAS
@@ -162,3 +158,242 @@ INSERT INTO categorias (nombre) VALUES ('Electrónica'), ('Hogar');
 ---
 
 Cuando quieras, seguimos con la **Unidad 2.2** o cualquier otro tema que necesites. ¿Querés que veamos cómo insertar datos o cómo hacer relaciones entre tablas?
+
+////////////////////////////////////////////////////////////////////
+
+## 🟦 UNIDAD 2.2 – MODIFICAR TABLAS
+
+---
+
+### ✅ 2a. Agregar, modificar o borrar columnas
+
+Las tablas se pueden modificar fácilmente con el comando `ALTER TABLE`. Este permite:
+
+#### 🟢 Agregar una columna:
+
+```sql
+ALTER TABLE productos ADD marca VARCHAR(100);
+```
+
+Esto agrega una columna llamada `marca` al final de la tabla `productos`.
+
+#### 🟡 Modificar una columna:
+
+```sql
+ALTER TABLE productos MODIFY marca VARCHAR(150);
+```
+
+Esto cambia el tipo o tamaño de la columna `marca`.
+
+#### 🔴 Borrar una columna:
+
+```sql
+ALTER TABLE productos DROP COLUMN marca;
+```
+
+Esto elimina completamente la columna.
+
+#### 🧪 Ejercicio:
+
+1. Creamos una tabla simple:
+
+```sql
+CREATE TABLE libros (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  titulo VARCHAR(100)
+);
+```
+
+2. Agregamos una columna `autor`:
+
+```sql
+ALTER TABLE libros ADD autor VARCHAR(100);
+```
+
+3. Modificamos la columna `autor` para aumentar su tamaño:
+
+```sql
+ALTER TABLE libros MODIFY autor VARCHAR(200);
+```
+
+4. Borramos la columna:
+
+```sql
+ALTER TABLE libros DROP COLUMN autor;
+```
+
+---
+
+### ✅ 2b. Tipos de restricciones (`NOT NULL`, `UNIQUE`, `DEFAULT`)
+
+Las **restricciones** controlan cómo se insertan y mantienen los datos en las tablas.
+
+#### 🔸 `NOT NULL`:
+
+Evita que una columna tenga valores vacíos.
+
+```sql
+nombre VARCHAR(100) NOT NULL
+```
+
+#### 🔸 `UNIQUE`:
+
+Impide que se repitan valores en esa columna.
+
+```sql
+email VARCHAR(100) UNIQUE
+```
+
+#### 🔸 `DEFAULT`:
+
+Asigna un valor por defecto si no se especifica otro.
+
+```sql
+activo BOOLEAN DEFAULT TRUE
+```
+
+#### 🧪 Ejemplo completo:
+
+```sql
+CREATE TABLE usuarios (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  registrado DATE DEFAULT CURRENT_DATE
+);
+```
+
+#### 🏋️‍♂️ Ejercicio:
+
+Modificá la tabla `libros` para agregar una columna `precio` con valor por defecto de 100:
+
+```sql
+ALTER TABLE libros ADD precio DECIMAL(10,2) DEFAULT 100.00;
+```
+
+---
+
+### ✅ 2c. Eliminar tablas o bases de datos (con cuidado)
+
+⚠️ ¡Estas operaciones borran datos para siempre!
+
+#### 🔥 Eliminar una tabla:
+
+```sql
+DROP TABLE productos;
+```
+
+#### 🔥 Eliminar una base de datos:
+
+```sql
+DROP DATABASE tienda;
+```
+
+#### 🧪 Buenas prácticas:
+
+* Revisar bien los nombres.
+* Hacer respaldo si es necesario.
+* Asegurarte de no tener relaciones activas con otras tablas.
+
+#### 🏋️‍♂️ Ejercicio:
+
+Eliminá una tabla temporal:
+
+```sql
+CREATE TABLE temporal (id INT);
+DROP TABLE temporal;
+```
+
+---
+
+### ✅ 2d. Insertar datos
+
+Una vez creada la tabla, se insertan datos con `INSERT INTO`.
+
+#### 🧪 Ejemplo:
+
+```sql
+INSERT INTO libros (titulo, precio) VALUES ('Cien años de soledad', 1800.00);
+```
+
+Podés insertar varios registros a la vez:
+
+```sql
+INSERT INTO libros (titulo, precio) VALUES 
+('El Principito', 900.00),
+('1984', 1200.50),
+('Rayuela', 1500.00);
+```
+
+#### 🏋️‍♂️ Ejercicio:
+
+Insertá 2 usuarios en la tabla `usuarios`:
+
+```sql
+INSERT INTO usuarios (nombre, email) VALUES 
+('Juan Pérez', 'juan@example.com'),
+('Ana García', 'ana@example.com');
+```
+
+---
+
+### ✅ 2e. Hacer relaciones entre tablas
+
+Una **relación** permite conectar datos entre dos o más tablas. Se hace con **llaves foráneas** (`FOREIGN KEY`).
+
+#### 📘 Supongamos:
+
+* Una tabla `categorias`.
+* Una tabla `productos` que pertenece a una categoría.
+
+#### 🧪 Paso a paso:
+
+1. Crear la tabla `categorias`:
+
+```sql
+CREATE TABLE categorias (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(100)
+);
+```
+
+2. Crear la tabla `productos` con relación:
+
+```sql
+CREATE TABLE productos (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(100),
+  categoria_id INT,
+  FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+```
+
+Ahora, cada producto queda asociado a una categoría específica por `categoria_id`.
+
+#### 🧪 Insertar datos:
+
+```sql
+INSERT INTO categorias (nombre) VALUES ('Electrónica'), ('Ropa');
+
+INSERT INTO productos (nombre, categoria_id) 
+VALUES ('Smartphone', 1), ('Campera', 2);
+```
+
+#### 🏋️‍♂️ Ejercicio:
+
+1. Crear una tabla `clientes`.
+2. Crear una tabla `pedidos` que tenga un `cliente_id` que se relacione con la tabla `clientes`.
+
+```sql
+CREATE TABLE clientes (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(100)
+);
+
+CREATE TABLE pedidos (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  producto VARCHAR(100),
+  cliente_id INT,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+```
