@@ -231,3 +231,82 @@ Ejercicio:
 3. Insertar 3 alumnos
 4. Consultar alumnos con nota > 7:
 SELECT * FROM alumnos WHERE nota > 7;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+GUÍA PRÁCTICA – USO DE MYSQL CON XAMPP Y PHPMYADMIN
+
+PASO 1: Iniciar Apache y MySQL
+- Abrir el XAMPP Control Panel.
+- Hacer clic en "Start" para Apache y MySQL.
+- Ambos recuadros deben volverse verdes.
+
+PASO 2: Acceder a PHPMyAdmin
+- Abrir navegador.
+- Ir a: http://localhost/phpmyadmin
+
+PASO 3: Crear una base de datos
+- Clic en “Bases de datos”.
+- Escribir nombre: mi_primera_bd
+- Cotejamiento: utf8_general_ci (o por defecto).
+- Clic en “Crear”.
+
+PASO 4: Crear una tabla
+- Nombre de tabla: usuarios
+- Columnas: 4
+
+Campos:
+id         | INT     | AUTO_INCREMENT | PRIMARY KEY
+nombre     | VARCHAR | 100
+email      | VARCHAR | 100
+edad       | INT
+
+- Guardar tabla.
+
+PASO 5: Insertar registros
+- Ir a la tabla usuarios.
+- Pestaña “Insertar”.
+- Cargar datos (dejar ID vacío si es AUTO_INCREMENT):
+
+nombre: Kevin Wittner
+email: kevin@mail.com
+edad: 25
+
+nombre: Ana Gómez
+email: ana@mail.com
+edad: 30
+
+- Clic en “Continuar”.
+
+PASO 6: Ver registros con SQL
+- Ir a la pestaña “SQL” dentro de la tabla.
+- Escribir la siguiente consulta:
+
+SELECT * FROM usuarios;
+
+- Clic en “Continuar” para ver los datos.
+
+PASO 7: Crear otra tabla – productos
+- Nombre de tabla: productos
+- Columnas: 4
+
+Campos:
+id      | INT     | AUTO_INCREMENT | PRIMARY KEY
+nombre  | VARCHAR | 100
+precio  | DECIMAL | 10,2
+stock   | INT
+
+Insertar los siguientes datos:
+
+Mouse   | 15.99  | 50
+Teclado | 35.00  | 20
+Monitor | 400.00 | 10
+
+PASO 8: Consultar productos con stock > 15
+- Ir a la pestaña “SQL” dentro de la tabla productos.
+- Escribir:
+
+SELECT * FROM productos WHERE stock > 15;
+
+- Clic en “Continuar”.
+- Verás solo los productos con stock mayor a 15 unidades.
+
+¡Listo! Ya sabés cómo usar PHPMyAdmin para crear bases, insertar datos y hacer consultas con SQL.

@@ -1,0 +1,164 @@
+Perfecto, Kevin. Acá tenés toda la explicación completa de la **UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS** (sección 2.1) con ejemplos y ejercicios, como pediste, sin el archivo `.txt`:
+
+---
+
+## 🟦 UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS
+
+### 2.1 CREAR TABLAS
+
+---
+
+### ✅ 2a. Concepto de tabla, campos, filas y columnas
+
+En bases de datos, una **tabla** es una estructura que almacena información organizada en **columnas** (también llamadas campos) y **filas** (también llamadas registros).
+
+* **Tabla**: es un conjunto de datos relacionados, almacenados de forma estructurada.
+* **Campos o columnas**: cada campo define una categoría de datos, como “nombre”, “edad” o “precio”.
+* **Filas o registros**: cada fila contiene un conjunto de valores que representan una instancia concreta, como una persona, producto o pedido.
+
+Podés imaginarlo como una hoja de Excel:
+
+* Las columnas son los títulos de cada dato.
+* Las filas son los datos reales, una por cada ítem o persona.
+
+#### 🧪 Ejemplo práctico:
+
+```sql
+CREATE TABLE empleados (
+  id INT,
+  nombre VARCHAR(100),
+  edad INT,
+  email VARCHAR(100)
+);
+```
+
+Aquí creás una tabla llamada `empleados` con 4 columnas:
+
+* `id`: número identificador.
+* `nombre`: texto de hasta 100 caracteres.
+* `edad`: número entero.
+* `email`: texto.
+
+#### 🏋️‍♂️ Ejercicio:
+
+Creá una tabla llamada `cursos` con los siguientes campos:
+
+* `id` (INT)
+* `nombre` (VARCHAR(150))
+* `duracion` (INT, en horas)
+
+```sql
+CREATE TABLE cursos (
+  id INT,
+  nombre VARCHAR(150),
+  duracion INT
+);
+```
+
+---
+
+### ✅ 2b. Tipos de datos (INT, VARCHAR, TEXT, DATE, BOOLEAN, etc.)
+
+Al crear una tabla, es necesario definir **el tipo de dato** para cada campo. Esto le indica a MySQL qué clase de información esperar.
+
+#### 🔸 Tipos de datos más comunes:
+
+| Tipo                      | Descripción                        | Ejemplo de uso             |
+| ------------------------- | ---------------------------------- | -------------------------- |
+| `INT`                     | Números enteros                    | edad, cantidad             |
+| `DECIMAL(10,2)` o `FLOAT` | Números con decimales              | precios, puntajes          |
+| `VARCHAR(n)`              | Texto corto (hasta `n` caracteres) | nombres, correos           |
+| `TEXT`                    | Texto largo (sin límite definido)  | descripciones, comentarios |
+| `DATE`                    | Fecha (formato YYYY-MM-DD)         | fecha de nacimiento        |
+| `DATETIME`                | Fecha y hora                       | registros de eventos       |
+| `BOOLEAN` o `TINYINT(1)`  | Valor verdadero (1) o falso (0)    | activo/inactivo, aprobado  |
+
+#### 🧪 Ejemplo:
+
+```sql
+CREATE TABLE productos (
+  id INT,
+  nombre VARCHAR(100),
+  descripcion TEXT,
+  precio DECIMAL(10,2),
+  disponible BOOLEAN,
+  fecha_ingreso DATE
+);
+```
+
+Esta tabla guarda productos con nombre, descripción, precio, si está disponible o no, y cuándo fue ingresado.
+
+#### 🏋️‍♂️ Ejercicio:
+
+Creá una tabla `alumnos` con los campos:
+
+* `id` (INT)
+* `nombre` (VARCHAR 100)
+* `aprobado` (BOOLEAN)
+* `ingreso` (DATE)
+
+```sql
+CREATE TABLE alumnos (
+  id INT,
+  nombre VARCHAR(100),
+  aprobado BOOLEAN,
+  ingreso DATE
+);
+```
+
+---
+
+### ✅ 2c. Clave primaria (PRIMARY KEY) y auto incrementos (AUTO\_INCREMENT)
+
+Una **clave primaria** (PRIMARY KEY) identifica de forma única cada fila dentro de una tabla. Es un campo obligatorio, único y no puede contener valores `NULL`.
+
+El modificador **AUTO\_INCREMENT** permite que MySQL aumente automáticamente el valor de ese campo en cada nueva fila.
+
+#### 🧪 Ejemplo:
+
+```sql
+CREATE TABLE clientes (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(100),
+  email VARCHAR(100)
+);
+```
+
+Esto significa que cada nuevo cliente tendrá un `id` automático que comienza en 1 y aumenta en 1 con cada inserción.
+
+#### ⚠️ Importancia:
+
+* Evita duplicados.
+* Facilita relaciones entre tablas.
+* Garantiza la integridad de los datos.
+
+#### 🏋️‍♂️ Ejercicio:
+
+Creá una tabla `categorias` con:
+
+* `id` como clave primaria y autoincrementable.
+* `nombre` como campo de texto.
+
+```sql
+CREATE TABLE categorias (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(100)
+);
+```
+
+Agregá dos categorías:
+
+```sql
+INSERT INTO categorias (nombre) VALUES ('Electrónica'), ('Hogar');
+```
+
+✅ Resultado esperado:
+
+| id | nombre      |
+| -- | ----------- |
+| 1  | Electrónica |
+| 2  | Hogar       |
+
+---
+
+Cuando quieras, seguimos con la **Unidad 2.2** o cualquier otro tema que necesites. ¿Querés que veamos cómo insertar datos o cómo hacer relaciones entre tablas?
