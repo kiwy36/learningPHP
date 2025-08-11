@@ -1,0 +1,217 @@
+## 🐶🐱 Ejercicio integrador: Base de datos “PetCenter” (Tienda de mascotas y veterinaria)
+
+---
+
+### 📘 Objetivo:
+
+Construir desde cero una base de datos para una tienda de mascotas que también brinda servicios veterinarios. Vas a:
+
+* Crear la base de datos.
+* Crear tablas con claves primarias y foráneas.
+* Usar tipos de datos correctamente.
+* Aplicar restricciones (`NOT NULL`, `UNIQUE`, `DEFAULT`).
+* Insertar datos reales.
+* Establecer relaciones entre tablas.
+* Dejar todo listo para consultas avanzadas en el futuro.
+
+---
+
+## ✅ PASO 1 – Crear la base de datos
+
+```sql
+CREATE DATABASE petcenter;
+USE petcenter;
+```
+
+🎯 **Objetivo:** Aprendiste que `CREATE DATABASE` crea el contenedor principal donde estarán las tablas. `USE` selecciona esa base para trabajar.
+
+---
+
+## ✅ PASO 2 – Crear las tablas principales
+
+### 🟦 1. Tabla `clientes`
+
+```sql
+CREATE TABLE clientes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  telefono VARCHAR(20),
+  fecha_registro DATE DEFAULT CURRENT_DATE
+);
+```
+
+🎯 **Explicación:**
+
+* `AUTO_INCREMENT` para generar ID automáticamente.
+* `NOT NULL` asegura que siempre haya nombre.
+* `UNIQUE` en email evita duplicados.
+* `DEFAULT` define una fecha automática.
+
+---
+
+### 🟦 2. Tabla `mascotas`
+
+```sql
+CREATE TABLE mascotas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  especie VARCHAR(50),
+  raza VARCHAR(100),
+  edad INT,
+  cliente_id INT,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+```
+
+🎯 **Explicación:**
+
+* Cada mascota se relaciona con un cliente.
+* `cliente_id` es una **clave foránea** que vincula a `clientes`.
+
+---
+
+### 🟦 3. Tabla `productos`
+
+```sql
+CREATE TABLE productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT,
+  precio DECIMAL(10,2) NOT NULL,
+  stock INT DEFAULT 0
+);
+```
+
+🎯 **Explicación:**
+
+* `DECIMAL` para precios con coma.
+* `DEFAULT 0` asegura que stock nunca sea nulo.
+* Usamos `TEXT` para descripciones largas.
+
+---
+
+### 🟦 4. Tabla `categorias_productos`
+
+```sql
+CREATE TABLE categorias_productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) UNIQUE NOT NULL
+);
+```
+
+🎯 **Explicación:**
+
+* Creamos una tabla de categorías para productos (Ej: Alimentos, Juguetes, Medicamentos).
+* `UNIQUE` evita repetir categorías.
+
+---
+
+### 🟦 5. Relación entre productos y categorías
+
+```sql
+ALTER TABLE productos ADD categoria_id INT;
+ALTER TABLE productos ADD FOREIGN KEY (categoria_id) REFERENCES categorias_productos(id);
+```
+
+🎯 **Explicación:**
+
+* Se relaciona cada producto con una categoría.
+
+---
+
+### 🟦 6. Tabla `veterinarios`
+
+```sql
+CREATE TABLE veterinarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  matricula VARCHAR(50) UNIQUE,
+  especialidad VARCHAR(100)
+);
+```
+
+🎯 **Explicación:**
+
+* `matricula` es única para cada profesional.
+* Esto nos permitirá agendar turnos veterinarios más adelante.
+
+---
+
+### 🟦 7. Tabla `consultas_veterinarias`
+
+```sql
+CREATE TABLE consultas_veterinarias (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  mascota_id INT NOT NULL,
+  veterinario_id INT NOT NULL,
+  fecha DATE NOT NULL,
+  motivo TEXT,
+  FOREIGN KEY (mascota_id) REFERENCES mascotas(id),
+  FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id)
+);
+```
+
+🎯 **Explicación:**
+
+* Relaciona mascotas y veterinarios.
+* Guarda fecha y motivo de cada atención.
+
+---
+
+## ✅ PASO 3 – Insertar datos de prueba
+
+```sql
+-- Clientes
+INSERT INTO clientes (nombre, email, telefono) VALUES 
+('Juan Pérez', 'juan@mail.com', '12345678'),
+('Ana López', 'ana@mail.com', '87654321');
+
+-- Mascotas
+INSERT INTO mascotas (nombre, especie, raza, edad, cliente_id) VALUES 
+('Firulais', 'Perro', 'Labrador', 3, 1),
+('Mishi', 'Gato', 'Siames', 2, 2);
+
+-- Categorías
+INSERT INTO categorias_productos (nombre) VALUES 
+('Alimentos'), ('Juguetes'), ('Medicamentos');
+
+-- Productos
+INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id) VALUES
+('Croquetas Premium', 'Bolsa de 10kg', 8500.00, 30, 1),
+('Pelota con sonido', 'Pelota para perro que chirría', 1200.00, 15, 2),
+('Antipulgas', 'Pastilla mensual antipulgas', 3000.00, 20, 3);
+
+-- Veterinarios
+INSERT INTO veterinarios (nombre, matricula, especialidad) VALUES
+('Dra. Marta Gómez', 'VET12345', 'Felinos'),
+('Dr. Luis Romero', 'VET67890', 'Caninos');
+
+-- Consultas
+INSERT INTO consultas_veterinarias (mascota_id, veterinario_id, fecha, motivo) VALUES
+(1, 2, '2025-08-01', 'Vacunación anual'),
+(2, 1, '2025-08-03', 'Chequeo general');
+```
+
+---
+
+## ✅ PASO 4 – Verificar con SELECT
+
+```sql
+SELECT * FROM clientes;
+SELECT * FROM mascotas;
+SELECT * FROM productos WHERE stock > 10;
+SELECT * FROM consultas_veterinarias;
+```
+
+🎯 **Explicación:**
+Estas consultas permiten comprobar que la base de datos está funcionando correctamente.
+
+---
+
+## 📦 Resultado Final
+
+✔ Base de datos `petcenter` lista
+✔ Relacionada y normalizada
+✔ Datos de clientes, mascotas, productos, consultas y veterinarios
+✔ Preparada para futuras operaciones (ventas, recetas, historial médico, stock, etc.)
