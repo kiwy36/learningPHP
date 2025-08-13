@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PetCenter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>PetCenter</h1>
+    <button onclick="cargarProductos()">Ver productos</button>
+    <div id="lista-productos"></div>
+
+    <h2>Nuevo Pedido</h2>
+    <form id="pedidoForm">
+        Cliente ID: <input type="number" name="cliente_id"><br>
+        Producto ID: <input type="number" name="producto_id"><br>
+        Cantidad: <input type="number" name="cantidad"><br>
+        Precio: <input type="number" name="precio"><br>
+        <button type="submit">Registrar pedido</button>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+</html>
