@@ -396,4 +396,4 @@ CREATE TABLE pedidos (
   cliente_id INT,
   FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
-```
+```5151465561651651561651
