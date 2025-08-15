@@ -396,4 +396,172 @@ CREATE TABLE pedidos (
   cliente_id INT,
   FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
-```5151465561651651561651
+
+Perfecto ✅
+Vamos a desarrollar **la UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS** con explicaciones detalladas, ejemplos y ejercicios.
+
+---
+
+## **UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS**
+
+---
+
+### **2.1 Crear tablas**
+
+En MySQL, las **tablas** son la estructura principal para almacenar datos.
+Una tabla es como una hoja de cálculo:
+
+* **Filas** (rows): cada una es un registro completo.
+* **Columnas** (columns o campos): cada una almacena un tipo específico de dato (número, texto, fecha, etc.).
+
+Para crear una tabla se usa el comando **`CREATE TABLE`**, especificando el nombre de la tabla y la definición de cada columna.
+
+Ejemplo básico:
+
+```sql
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    email VARCHAR(100),
+    PRIMARY KEY (id_cliente)
+);
+```
+
+En este ejemplo:
+
+* `clientes` es el nombre de la tabla.
+* `id_cliente`, `nombre` y `email` son columnas.
+* `PRIMARY KEY (id_cliente)` indica que **id\_cliente** es único para cada registro.
+* `AUTO_INCREMENT` hace que MySQL asigne automáticamente un valor incremental al nuevo registro.
+
+---
+
+### **2a. Concepto de tabla, campos, filas y columnas**
+
+1. **Tabla** → Conjunto estructurado de datos organizados en filas y columnas.
+2. **Campos** → Definen el tipo de información que guarda cada columna.
+3. **Columnas** → Contienen un único tipo de dato para todos los registros.
+4. **Filas** → Cada fila es un registro individual.
+
+📌 Ejemplo visual:
+
+| id\_cliente | nombre | email                                     |
+| ----------- | ------ | ----------------------------------------- |
+| 1           | Laura  | [laura@mail.com](mailto:laura@mail.com)   |
+| 2           | Martín | [martin@mail.com](mailto:martin@mail.com) |
+| 3           | Andrea | [andrea@mail.com](mailto:andrea@mail.com) |
+
+---
+
+### **2b. Tipos de datos más comunes en MySQL**
+
+Al crear columnas, se debe especificar **el tipo de dato**.
+Los más comunes son:
+
+| Tipo de dato             | Descripción                                     | Ejemplo             |
+| ------------------------ | ----------------------------------------------- | ------------------- |
+| `INT`                    | Números enteros                                 | 25, -100, 5000      |
+| `DECIMAL(m,n)`           | Números decimales precisos                      | 45.67               |
+| `VARCHAR(n)`             | Texto de longitud variable hasta `n` caracteres | 'Kevin'             |
+| `TEXT`                   | Texto largo (hasta 65,535 caracteres)           | 'Comentario...'     |
+| `DATE`                   | Fecha (formato AAAA-MM-DD)                      | 2025-08-14          |
+| `DATETIME`               | Fecha y hora                                    | 2025-08-14 22:15:00 |
+| `BOOLEAN` o `TINYINT(1)` | Verdadero (1) o Falso (0)                       | 1                   |
+
+Ejemplo de tabla usando varios tipos:
+
+```sql
+CREATE TABLE productos (
+    id_producto INT AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    precio DECIMAL(10,2),
+    fecha_creacion DATE,
+    en_stock BOOLEAN,
+    PRIMARY KEY (id_producto)
+);
+```
+
+---
+
+### **2c. Clave primaria (PRIMARY KEY) y auto incrementos (AUTO\_INCREMENT)**
+
+#### **PRIMARY KEY**
+
+* Es un campo o combinación de campos que identifica **únicamente** a cada fila de la tabla.
+* No puede haber valores repetidos ni valores `NULL`.
+
+Ejemplo:
+
+```sql
+PRIMARY KEY (id_cliente)
+```
+
+#### **AUTO\_INCREMENT**
+
+* Hace que el valor de un campo numérico aumente automáticamente cada vez que se inserta un nuevo registro.
+* Solo se puede usar en columnas con tipo numérico (`INT`, `BIGINT`, etc.) y generalmente en claves primarias.
+
+Ejemplo:
+
+```sql
+id_cliente INT AUTO_INCREMENT
+```
+
+💡 Usando ambos:
+
+```sql
+CREATE TABLE usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    email VARCHAR(100)
+);
+```
+
+---
+
+### **Ejercicio práctico 1**
+
+Crea una tabla llamada **mascotas** con las siguientes columnas:
+
+* id\_mascota (entero, clave primaria, autoincremental)
+* nombre (texto hasta 50 caracteres)
+* especie (texto hasta 30 caracteres)
+* fecha\_nacimiento (fecha)
+* peso (decimal de 5 dígitos, con 2 decimales)
+* vacunado (booleano)
+
+**Solución:**
+
+```sql
+CREATE TABLE mascotas (
+    id_mascota INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    especie VARCHAR(30),
+    fecha_nacimiento DATE,
+    peso DECIMAL(5,2),
+    vacunado BOOLEAN
+);
+```
+
+---
+
+### **Ejercicio práctico 2**
+
+Agrega un registro de ejemplo a la tabla `mascotas`:
+
+```sql
+INSERT INTO mascotas (nombre, especie, fecha_nacimiento, peso, vacunado)
+VALUES ('Luna', 'Perro', '2021-05-10', 12.50, 1);
+```
+
+📌 Esto insertará:
+
+| id\_mascota | nombre | especie | fecha\_nacimiento | peso  | vacunado |
+| ----------- | ------ | ------- | ----------------- | ----- | -------- |
+| 1           | Luna   | Perro   | 2021-05-10        | 12.50 | 1        |
+
+---
+
+Si quieres, puedo prepararte **la UNIDAD 2 completa en SQL** lista para importar en MySQL y que puedas probar todos los ejemplos en tu base de datos.
+¿Quieres que lo haga así para que lo tengas todo listo para ejecutar?

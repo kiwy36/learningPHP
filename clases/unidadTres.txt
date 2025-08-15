@@ -1,0 +1,228 @@
+# **UNIDAD 3 – OPERACIONES CRUD (BÁSICAS Y FUNDAMENTALES)**
+
+CRUD significa **Create, Read, Update, Delete**, que son las cuatro operaciones básicas para manipular datos en una base de datos.
+
+---
+
+## **3.1 Insertar datos**
+
+---
+
+### **3a. Sintaxis `INSERT INTO`**
+
+Sirve para agregar registros nuevos en una tabla.
+La estructura básica es:
+
+```sql
+INSERT INTO nombre_tabla (columna1, columna2, columna3, ...)
+VALUES (valor1, valor2, valor3, ...);
+```
+
+📌 Si insertas en **todas las columnas** y en el orden exacto, puedes omitir los nombres de columna:
+
+```sql
+INSERT INTO productos VALUES (1, 'Teclado', 1500.50, '2025-08-14', 1);
+```
+
+⚠️ No es muy recomendable porque depende del orden exacto de las columnas.
+
+---
+
+### **3b. Insertar uno o varios registros**
+
+**Uno solo:**
+
+```sql
+INSERT INTO productos (nombre, precio, fecha_creacion, en_stock)
+VALUES ('Mouse óptico', 900.00, '2025-08-14', 1);
+```
+
+**Varios a la vez:**
+
+```sql
+INSERT INTO productos (nombre, precio, fecha_creacion, en_stock)
+VALUES 
+('Monitor 24"', 45000.00, '2025-08-14', 1),
+('Parlantes', 3200.00, '2025-08-14', 0),
+('Silla gamer', 65000.00, '2025-08-14', 1);
+```
+
+---
+
+### **3c. Buenas prácticas para campos NULL o default**
+
+* Si un campo **puede ser NULL**, se puede omitir o poner `NULL`:
+
+```sql
+INSERT INTO productos (nombre, precio, fecha_creacion, en_stock)
+VALUES ('Pendrive 32GB', NULL, '2025-08-14', 1);
+```
+
+* Si un campo tiene **DEFAULT**, no es necesario especificarlo:
+
+```sql
+CREATE TABLE ejemplo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    activo BOOLEAN DEFAULT 1
+);
+INSERT INTO ejemplo (nombre) VALUES ('Kevin'); -- activo será 1 automáticamente
+```
+
+---
+
+## **3.2 Consultar datos**
+
+---
+
+### **3a. `SELECT * FROM`**
+
+Sirve para **leer datos** de una tabla.
+
+```sql
+SELECT * FROM productos;
+```
+
+Esto devuelve **todas las columnas y registros**.
+
+---
+
+### **3b. Filtrar con `WHERE`**
+
+Permite mostrar solo registros que cumplan una condición.
+
+```sql
+SELECT * FROM productos WHERE en_stock = 1;
+```
+
+Operadores comunes:
+
+* `=` igual
+* `>` mayor que
+* `<` menor que
+* `<>` distinto
+* `BETWEEN x AND y` entre
+* `LIKE '%texto%'` búsqueda parcial
+
+Ejemplo:
+
+```sql
+SELECT * FROM productos WHERE precio BETWEEN 1000 AND 5000;
+```
+
+---
+
+### **3c. Ordenar con `ORDER BY`**
+
+Ordena los resultados:
+
+```sql
+SELECT * FROM productos ORDER BY precio ASC; -- ascendente
+SELECT * FROM productos ORDER BY precio DESC; -- descendente
+```
+
+---
+
+### **3d. Limitar resultados con `LIMIT`**
+
+Muestra solo cierta cantidad de filas:
+
+```sql
+SELECT * FROM productos LIMIT 5; -- solo 5 resultados
+```
+
+Con desplazamiento:
+
+```sql
+SELECT * FROM productos LIMIT 5 OFFSET 10; -- desde la fila 11
+```
+
+---
+
+## **3.3 Actualizar datos**
+
+---
+
+### **3a. `UPDATE` con condición `WHERE`**
+
+Sirve para modificar datos existentes:
+
+```sql
+UPDATE productos
+SET precio = 2000.00, en_stock = 0
+WHERE id_producto = 3;
+```
+
+---
+
+### **3b. Evitar errores: sin `WHERE` actualiza todo**
+
+⚠️ Este comando cambiaría TODAS las filas:
+
+```sql
+UPDATE productos SET precio = 0; -- peligroso
+```
+
+Siempre usa `WHERE` para limitar.
+
+---
+
+### **3c. Actualización masiva vs individual**
+
+* **Individual:**
+
+```sql
+UPDATE productos SET precio = 2500 WHERE id_producto = 2;
+```
+
+* **Masiva:**
+
+```sql
+UPDATE productos SET en_stock = 0 WHERE precio > 50000;
+```
+
+---
+
+## **3.4 Eliminar datos**
+
+---
+
+### **3a. `DELETE FROM` con `WHERE`**
+
+Elimina registros:
+
+```sql
+DELETE FROM productos WHERE id_producto = 5;
+```
+
+---
+
+### **3b. Eliminar todos los registros**
+
+```sql
+DELETE FROM productos;
+```
+
+⚠️ Esto borra todos los datos pero **mantiene la estructura**.
+
+---
+
+### **3c. `TRUNCATE` vs `DELETE`**
+
+* `DELETE` → Borra datos pero mantiene auto\_increment.
+* `TRUNCATE` → Borra todo y reinicia auto\_increment.
+
+```sql
+TRUNCATE TABLE productos;
+```
+
+---
+
+## **Ejercicio práctico final**
+
+1. **Insertar** tres productos con nombre, precio, fecha y stock.
+2. **Consultar** todos los productos con precio mayor a 3000 ordenados de mayor a menor.
+3. **Actualizar** el precio de un producto específico.
+4. **Eliminar** un producto usando su ID.
+
+---
