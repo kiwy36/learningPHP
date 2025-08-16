@@ -226,3 +226,4 @@ TRUNCATE TABLE productos;
 4. **Eliminar** un producto usando su ID.
 
 ---
+dsaidjiasjdiajd
