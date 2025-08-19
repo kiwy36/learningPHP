@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Conexión JS - PHP - MySQL</title>
+</head>
+<body>
+  <h1>Conexión a tabla MySQL</h1>
+  <button id="btnConectar">Probar conexión</button>
+  <button id="btnLeer">Leer tabla</button>
+
+  <script>
+    // ⚠️ Asegurate de poner la ruta exacta de donde está tu obtener_personas.php
+    const PHP_URL = "http://localhost/mi_trabajo/obtener_personas.php";
+
+    // Botón para probar conexión
+    document.getElementById("btnConectar").addEventListener("click", () => {
+      fetch(PHP_URL)
+        .then(res => res.json())
+        .then(() => {
+          console.log("✅ Conexión exitosa a la base de datos");
+        })
+        .catch(err => {
+          console.error("❌ Error en la conexión:", err);
+        });
+    });
+
+    // Botón para leer la tabla
+    document.getElementById("btnLeer").addEventListener("click", () => {
+      fetch(PHP_URL)
+        .then(res => res.json())
+        .then(data => {
+          console.log("📋 Datos de la tabla:");
+          data.forEach(p => {
+            console.log(`ID: ${p.id} - Nombre: ${p.nombre}`);
+          });
+        })
+        .catch(err => {
+          console.error("❌ Error al leer tabla:", err);
+        });
+    });
+  </script>
+</body>
+</html>
