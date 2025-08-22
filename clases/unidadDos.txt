@@ -1,567 +1,300 @@
-## 🟦 UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS
+# 📊 UNIDAD 2 - TABLAS Y ESTRUCTURAS BÁSICAS
+## 2.1 CREAR TABLAS
 
-### 2.1 CREAR TABLAS
+### 2a. Concepto de Tabla, Campos, Filas y Columnas
 
----
+**Analogía: Una tabla es como una hoja de cálculo de Excel**
 
-### ✅ 2a. Concepto de tabla, campos, filas y columnas
+| Concepto      | En Excel      | En MySQL         | Ejemplo          |
+|---------------|---------------|------------------|------------------|
+| **Tabla**     | Hoja de cálculo | CREATE TABLE    | `clientes`       |
+| **Campo**     | Encabezado columna | Columna definida | `nombre`, `edad` |
+| **Fila**      | Fila de datos  | Registro         | Datos de 1 cliente |
+| **Columna**   | Columna        | Campo/Atributo   | Todos los nombres |
 
-En bases de datos, una **tabla** es una estructura que almacena información organizada en **columnas** (también llamadas campos) y **filas** (también llamadas registros).
-
-* **Tabla**: es un conjunto de datos relacionados, almacenados de forma estructurada.
-* **Campos o columnas**: cada campo define una categoría de datos, como “nombre”, “edad” o “precio”.
-* **Filas o registros**: cada fila contiene un conjunto de valores que representan una instancia concreta, como una persona, producto o pedido.
-
-Podés imaginarlo como una hoja de Excel:
-
-* Las columnas son los títulos de cada dato.
-* Las filas son los datos reales, una por cada ítem o persona.
-
-#### 🧪 Ejemplo práctico:
-
+**Ejemplo visual:**
 ```sql
-CREATE TABLE empleados (
-  id INT,
-  nombre VARCHAR(100),
-  edad INT,
-  email VARCHAR(100)
-);
+-- TABLA: estudiantes
++----+-----------+-----+------------+
+| id | nombre    | edad| ciudad     |  ← Campos/Columnas
++----+-----------+-----+------------+
+| 1  | Ana       | 20  | Madrid     |  ← Fila/Registro 1
+| 2  | Carlos    | 22  | Barcelona  |  ← Fila/Registro 2
+| 3  | Elena     | 21  | Valencia   |  ← Fila/Registro 3
++----+-----------+-----+------------+
 ```
 
-Aquí creás una tabla llamada `empleados` con 4 columnas:
+### 2b. Tipos de Datos Comunes
 
-* `id`: número identificador.
-* `nombre`: texto de hasta 100 caracteres.
-* `edad`: número entero.
-* `email`: texto.
+Cada campo debe tener un tipo de dato específico:
 
-#### 🏋️‍♂️ Ejercicio:
+**Numéricos:**
+- `INT` - Números enteros: `edad INT`
+- `DECIMAL(m, n)` - Números decimales: `precio DECIMAL(10, 2)`
+- `FLOAT` - Números con punto flotante: `temperatura FLOAT`
 
-Creá una tabla llamada `cursos` con los siguientes campos:
+**Texto:**
+- `VARCHAR(n)` - Texto de longitud variable (hasta 255): `nombre VARCHAR(100)`
+- `CHAR(n)` - Texto de longitud fija: `codigo CHAR(5)`
+- `TEXT` - Textos largos: `descripcion TEXT`
 
-* `id` (INT)
-* `nombre` (VARCHAR(150))
-* `duracion` (INT, en horas)
+**Fechas:**
+- `DATE` - Fecha (YYYY-MM-DD): `fecha_nacimiento DATE`
+- `DATETIME` - Fecha y hora: `fecha_registro DATETIME`
+- `TIMESTAMP` - Marca de tiempo: `ultimo_acceso TIMESTAMP`
 
-```sql
-CREATE TABLE cursos (
-  id INT,
-  nombre VARCHAR(150),
-  duracion INT
-);
-```
+**Booleanos:**
+- `BOOLEAN` o `TINYINT(1)` - Verdadero/Falso: `activo BOOLEAN`
 
----
-
-### ✅ 2b. Tipos de datos (INT, VARCHAR, TEXT, DATE, BOOLEAN, etc.)
-
-Al crear una tabla, es necesario definir **el tipo de dato** para cada campo. Esto le indica a MySQL qué clase de información esperar.
-
-#### 🔸 Tipos de datos más comunes:
-
-| Tipo                      | Descripción                        | Ejemplo de uso             |
-| ------------------------- | ---------------------------------- | -------------------------- |
-| `INT`                     | Números enteros                    | edad, cantidad             |
-| `DECIMAL(10,2)` o `FLOAT` | Números con decimales              | precios, puntajes          |
-| `VARCHAR(n)`              | Texto corto (hasta `n` caracteres) | nombres, correos           |
-| `TEXT`                    | Texto largo (sin límite definido)  | descripciones, comentarios |
-| `DATE`                    | Fecha (formato YYYY-MM-DD)         | fecha de nacimiento        |
-| `DATETIME`                | Fecha y hora                       | registros de eventos       |
-| `BOOLEAN` o `TINYINT(1)`  | Valor verdadero (1) o falso (0)    | activo/inactivo, aprobado  |
-
-#### 🧪 Ejemplo:
-
-```sql
-CREATE TABLE productos (
-  id INT,
-  nombre VARCHAR(100),
-  descripcion TEXT,
-  precio DECIMAL(10,2),
-  disponible BOOLEAN,
-  fecha_ingreso DATE
-);
-```
-
-Esta tabla guarda productos con nombre, descripción, precio, si está disponible o no, y cuándo fue ingresado.
-
-#### 🏋️‍♂️ Ejercicio:
-
-Creá una tabla `alumnos` con los campos:
-
-* `id` (INT)
-* `nombre` (VARCHAR 100)
-* `aprobado` (BOOLEAN)
-* `ingreso` (DATE)
-
-```sql
-CREATE TABLE alumnos (
-  id INT,
-  nombre VARCHAR(100),
-  aprobado BOOLEAN,
-  ingreso DATE
-);
-```
-
----
-
-### ✅ 2c. Clave primaria (PRIMARY KEY) y auto incrementos (AUTO\_INCREMENT)
-
-Una **clave primaria** (PRIMARY KEY) identifica de forma única cada fila dentro de una tabla. Es un campo obligatorio, único y no puede contener valores `NULL`.
-
-El modificador **AUTO\_INCREMENT** permite que MySQL aumente automáticamente el valor de ese campo en cada nueva fila.
-
-#### 🧪 Ejemplo:
-
-```sql
-CREATE TABLE clientes (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100),
-  email VARCHAR(100)
-);
-```
-
-Esto significa que cada nuevo cliente tendrá un `id` automático que comienza en 1 y aumenta en 1 con cada inserción.
-
-#### ⚠️ Importancia:
-
-* Evita duplicados.
-* Facilita relaciones entre tablas.
-* Garantiza la integridad de los datos.
-
-#### 🏋️‍♂️ Ejercicio:
-
-Creá una tabla `categorias` con:
-
-* `id` como clave primaria y autoincrementable.
-* `nombre` como campo de texto.
-
-```sql
-CREATE TABLE categorias (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100)
-);
-```
-
-Agregá dos categorías:
-
-```sql
-INSERT INTO categorias (nombre) VALUES ('Electrónica'), ('Hogar');
-```
-
-✅ Resultado esperado:
-
-| id | nombre      |
-| -- | ----------- |
-| 1  | Electrónica |
-| 2  | Hogar       |
-
----
-
-Cuando quieras, seguimos con la **Unidad 2.2** o cualquier otro tema que necesites. ¿Querés que veamos cómo insertar datos o cómo hacer relaciones entre tablas?
-
-////////////////////////////////////////////////////////////////////
-
-## 🟦 UNIDAD 2.2 – MODIFICAR TABLAS
-
----
-
-### ✅ 2a. Agregar, modificar o borrar columnas
-
-Las tablas se pueden modificar fácilmente con el comando `ALTER TABLE`. Este permite:
-
-#### 🟢 Agregar una columna:
-
-```sql
-ALTER TABLE productos ADD marca VARCHAR(100);
-```
-
-Esto agrega una columna llamada `marca` al final de la tabla `productos`.
-
-#### 🟡 Modificar una columna:
-
-```sql
-ALTER TABLE productos MODIFY marca VARCHAR(150);
-```
-
-Esto cambia el tipo o tamaño de la columna `marca`.
-
-#### 🔴 Borrar una columna:
-
-```sql
-ALTER TABLE productos DROP COLUMN marca;
-```
-
-Esto elimina completamente la columna.
-
-#### 🧪 Ejercicio:
-
-1. Creamos una tabla simple:
-
-```sql
-CREATE TABLE libros (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  titulo VARCHAR(100)
-);
-```
-
-2. Agregamos una columna `autor`:
-
-```sql
-ALTER TABLE libros ADD autor VARCHAR(100);
-```
-
-3. Modificamos la columna `autor` para aumentar su tamaño:
-
-```sql
-ALTER TABLE libros MODIFY autor VARCHAR(200);
-```
-
-4. Borramos la columna:
-
-```sql
-ALTER TABLE libros DROP COLUMN autor;
-```
-
----
-
-### ✅ 2b. Tipos de restricciones (`NOT NULL`, `UNIQUE`, `DEFAULT`)
-
-Las **restricciones** controlan cómo se insertan y mantienen los datos en las tablas.
-
-#### 🔸 `NOT NULL`:
-
-Evita que una columna tenga valores vacíos.
-
-```sql
-nombre VARCHAR(100) NOT NULL
-```
-
-#### 🔸 `UNIQUE`:
-
-Impide que se repitan valores en esa columna.
-
-```sql
-email VARCHAR(100) UNIQUE
-```
-
-#### 🔸 `DEFAULT`:
-
-Asigna un valor por defecto si no se especifica otro.
-
-```sql
-activo BOOLEAN DEFAULT TRUE
-```
-
-#### 🧪 Ejemplo completo:
-
+**Ejemplos prácticos:**
 ```sql
 CREATE TABLE usuarios (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100) NOT NULL,
-  email VARCHAR(100) UNIQUE,
-  registrado DATE DEFAULT CURRENT_DATE
-);
-```
-
-#### 🏋️‍♂️ Ejercicio:
-
-Modificá la tabla `libros` para agregar una columna `precio` con valor por defecto de 100:
-
-```sql
-ALTER TABLE libros ADD precio DECIMAL(10,2) DEFAULT 100.00;
-```
-
----
-
-### ✅ 2c. Eliminar tablas o bases de datos (con cuidado)
-
-⚠️ ¡Estas operaciones borran datos para siempre!
-
-#### 🔥 Eliminar una tabla:
-
-```sql
-DROP TABLE productos;
-```
-
-#### 🔥 Eliminar una base de datos:
-
-```sql
-DROP DATABASE tienda;
-```
-
-#### 🧪 Buenas prácticas:
-
-* Revisar bien los nombres.
-* Hacer respaldo si es necesario.
-* Asegurarte de no tener relaciones activas con otras tablas.
-
-#### 🏋️‍♂️ Ejercicio:
-
-Eliminá una tabla temporal:
-
-```sql
-CREATE TABLE temporal (id INT);
-DROP TABLE temporal;
-```
-
----
-
-### ✅ 2d. Insertar datos
-
-Una vez creada la tabla, se insertan datos con `INSERT INTO`.
-
-#### 🧪 Ejemplo:
-
-```sql
-INSERT INTO libros (titulo, precio) VALUES ('Cien años de soledad', 1800.00);
-```
-
-Podés insertar varios registros a la vez:
-
-```sql
-INSERT INTO libros (titulo, precio) VALUES 
-('El Principito', 900.00),
-('1984', 1200.50),
-('Rayuela', 1500.00);
-```
-
-#### 🏋️‍♂️ Ejercicio:
-
-Insertá 2 usuarios en la tabla `usuarios`:
-
-```sql
-INSERT INTO usuarios (nombre, email) VALUES 
-('Juan Pérez', 'juan@example.com'),
-('Ana García', 'ana@example.com');
-```
-
----
-
-### ✅ 2e. Hacer relaciones entre tablas
-
-Una **relación** permite conectar datos entre dos o más tablas. Se hace con **llaves foráneas** (`FOREIGN KEY`).
-
-#### 📘 Supongamos:
-
-* Una tabla `categorias`.
-* Una tabla `productos` que pertenece a una categoría.
-
-#### 🧪 Paso a paso:
-
-1. Crear la tabla `categorias`:
-
-```sql
-CREATE TABLE categorias (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100)
-);
-```
-
-2. Crear la tabla `productos` con relación:
-
-```sql
-CREATE TABLE productos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100),
-  categoria_id INT,
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id)
-);
-```
-
-Ahora, cada producto queda asociado a una categoría específica por `categoria_id`.
-
-#### 🧪 Insertar datos:
-
-```sql
-INSERT INTO categorias (nombre) VALUES ('Electrónica'), ('Ropa');
-
-INSERT INTO productos (nombre, categoria_id) 
-VALUES ('Smartphone', 1), ('Campera', 2);
-```
-
-#### 🏋️‍♂️ Ejercicio:
-
-1. Crear una tabla `clientes`.
-2. Crear una tabla `pedidos` que tenga un `cliente_id` que se relacione con la tabla `clientes`.
-
-```sql
-CREATE TABLE clientes (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nombre VARCHAR(100)
-);
-
-CREATE TABLE pedidos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  producto VARCHAR(100),
-  cliente_id INT,
-  FOREIGN KEY (cliente_id) REFERENCES clientes(id)
-);
-
-Perfecto ✅
-Vamos a desarrollar **la UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS** con explicaciones detalladas, ejemplos y ejercicios.
-
----
-
-## **UNIDAD 2 – TABLAS Y ESTRUCTURAS BÁSICAS**
-
----
-
-### **2.1 Crear tablas**
-
-En MySQL, las **tablas** son la estructura principal para almacenar datos.
-Una tabla es como una hoja de cálculo:
-
-* **Filas** (rows): cada una es un registro completo.
-* **Columnas** (columns o campos): cada una almacena un tipo específico de dato (número, texto, fecha, etc.).
-
-Para crear una tabla se usa el comando **`CREATE TABLE`**, especificando el nombre de la tabla y la definición de cada columna.
-
-Ejemplo básico:
-
-```sql
-CREATE TABLE clientes (
-    id_cliente INT AUTO_INCREMENT,
+    id INT,
     nombre VARCHAR(50),
     email VARCHAR(100),
-    PRIMARY KEY (id_cliente)
+    edad INT,
+    activo BOOLEAN,
+    fecha_registro DATE,
+    salario DECIMAL(10, 2)
 );
 ```
 
-En este ejemplo:
+### 2c. Clave Primaria (PRIMARY KEY) y Auto Incrementos (AUTO_INCREMENT)
 
-* `clientes` es el nombre de la tabla.
-* `id_cliente`, `nombre` y `email` son columnas.
-* `PRIMARY KEY (id_cliente)` indica que **id\_cliente** es único para cada registro.
-* `AUTO_INCREMENT` hace que MySQL asigne automáticamente un valor incremental al nuevo registro.
+**PRIMARY KEY (Clave Primaria):**
+- Identificador único de cada registro
+- No se puede repetir
+- No puede ser NULL
 
----
+**AUTO_INCREMENT:**
+- MySQL automáticamente asigna el siguiente número disponible
+- Ideal para campos ID
 
-### **2a. Concepto de tabla, campos, filas y columnas**
-
-1. **Tabla** → Conjunto estructurado de datos organizados en filas y columnas.
-2. **Campos** → Definen el tipo de información que guarda cada columna.
-3. **Columnas** → Contienen un único tipo de dato para todos los registros.
-4. **Filas** → Cada fila es un registro individual.
-
-📌 Ejemplo visual:
-
-| id\_cliente | nombre | email                                     |
-| ----------- | ------ | ----------------------------------------- |
-| 1           | Laura  | [laura@mail.com](mailto:laura@mail.com)   |
-| 2           | Martín | [martin@mail.com](mailto:martin@mail.com) |
-| 3           | Andrea | [andrea@mail.com](mailto:andrea@mail.com) |
-
----
-
-### **2b. Tipos de datos más comunes en MySQL**
-
-Al crear columnas, se debe especificar **el tipo de dato**.
-Los más comunes son:
-
-| Tipo de dato             | Descripción                                     | Ejemplo             |
-| ------------------------ | ----------------------------------------------- | ------------------- |
-| `INT`                    | Números enteros                                 | 25, -100, 5000      |
-| `DECIMAL(m,n)`           | Números decimales precisos                      | 45.67               |
-| `VARCHAR(n)`             | Texto de longitud variable hasta `n` caracteres | 'Kevin'             |
-| `TEXT`                   | Texto largo (hasta 65,535 caracteres)           | 'Comentario...'     |
-| `DATE`                   | Fecha (formato AAAA-MM-DD)                      | 2025-08-14          |
-| `DATETIME`               | Fecha y hora                                    | 2025-08-14 22:15:00 |
-| `BOOLEAN` o `TINYINT(1)` | Verdadero (1) o Falso (0)                       | 1                   |
-
-Ejemplo de tabla usando varios tipos:
-
+**Ejemplo:**
 ```sql
 CREATE TABLE productos (
-    id_producto INT AUTO_INCREMENT,
-    nombre VARCHAR(100),
-    descripcion TEXT,
-    precio DECIMAL(10,2),
-    fecha_creacion DATE,
-    en_stock BOOLEAN,
-    PRIMARY KEY (id_producto)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10, 2),
+    stock INT DEFAULT 0
 );
 ```
 
----
-
-### **2c. Clave primaria (PRIMARY KEY) y auto incrementos (AUTO\_INCREMENT)**
-
-#### **PRIMARY KEY**
-
-* Es un campo o combinación de campos que identifica **únicamente** a cada fila de la tabla.
-* No puede haber valores repetidos ni valores `NULL`.
-
-Ejemplo:
-
+**¿Por qué usarlos?**
 ```sql
-PRIMARY KEY (id_cliente)
+-- SIN primary key (problemas)
+INSERT INTO productos VALUES (1, 'Laptop', 999.99, 10);
+INSERT INTO productos VALUES (1, 'Tablet', 299.99, 5); -- ¡ERROR! ID repetido
+
+-- CON primary key y auto_increment (solución)
+INSERT INTO productos (nombre, precio, stock) VALUES ('Laptop', 999.99, 10);
+-- MySQL asigna automáticamente id=1
+INSERT INTO productos (nombre, precio, stock) VALUES ('Tablet', 299.99, 5);
+-- MySQL asigna automáticamente id=2
 ```
 
-#### **AUTO\_INCREMENT**
+## 2.2 MODIFICAR TABLAS
 
-* Hace que el valor de un campo numérico aumente automáticamente cada vez que se inserta un nuevo registro.
-* Solo se puede usar en columnas con tipo numérico (`INT`, `BIGINT`, etc.) y generalmente en claves primarias.
+### 2a. Agregar, Modificar o Borrar Columnas
 
-Ejemplo:
-
+**Agregar columna:**
 ```sql
-id_cliente INT AUTO_INCREMENT
+ALTER TABLE estudiantes ADD COLUMN telefono VARCHAR(15);
 ```
 
-💡 Usando ambos:
+**Modificar columna:**
+```sql
+-- Cambiar tipo de dato
+ALTER TABLE estudiantes MODIFY COLUMN telefono VARCHAR(20);
 
+-- Cambiar nombre de columna
+ALTER TABLE estudiantes CHANGE COLUMN telefono movil VARCHAR(20);
+```
+
+**Eliminar columna:**
+```sql
+ALTER TABLE estudiantes DROP COLUMN movil;
+```
+
+**Ejemplo completo:**
+```sql
+-- Tabla inicial
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100)
+);
+
+-- Agregar columna
+ALTER TABLE empleados ADD COLUMN salario DECIMAL(10, 2);
+
+-- Modificar columna
+ALTER TABLE empleados MODIFY COLUMN salario DECIMAL(12, 2);
+
+-- Eliminar columna
+ALTER TABLE empleados DROP COLUMN salario;
+```
+
+### 2b. Tipos de Restricciones (CONSTRAINTS)
+
+Las restricciones definen reglas para los datos:
+
+**NOT NULL - El campo no puede estar vacío:**
+```sql
+CREATE TABLE clientes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,  -- Obligatorio
+    email VARCHAR(100) NOT NULL    -- Obligatorio
+);
+```
+
+**UNIQUE - El valor debe ser único en la tabla:**
 ```sql
 CREATE TABLE usuarios (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    email VARCHAR(100)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE,   -- No se puede repetir
+    email VARCHAR(100) UNIQUE      -- No se puede repetir
 );
 ```
 
----
-
-### **Ejercicio práctico 1**
-
-Crea una tabla llamada **mascotas** con las siguientes columnas:
-
-* id\_mascota (entero, clave primaria, autoincremental)
-* nombre (texto hasta 50 caracteres)
-* especie (texto hasta 30 caracteres)
-* fecha\_nacimiento (fecha)
-* peso (decimal de 5 dígitos, con 2 decimales)
-* vacunado (booleano)
-
-**Solución:**
-
+**DEFAULT - Valor por defecto si no se especifica:**
 ```sql
-CREATE TABLE mascotas (
-    id_mascota INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    especie VARCHAR(30),
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fecha_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(20) DEFAULT 'pendiente',
+    cantidad INT DEFAULT 1
+);
+```
+
+**CHECK - Verificar condiciones personalizadas:**
+```sql
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    precio DECIMAL(10, 2) CHECK (precio > 0),  -- Precio debe ser positivo
+    stock INT CHECK (stock >= 0)               -- Stock no puede ser negativo
+);
+```
+
+**Ejemplo con múltiples restricciones:**
+```sql
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    dni VARCHAR(10) UNIQUE NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    salario DECIMAL(10, 2) CHECK (salario >= 0),
+    fecha_contratacion DATE DEFAULT (CURRENT_DATE),
+    activo BOOLEAN DEFAULT TRUE
+);
+```
+
+### 2c. Eliminar Tablas o Bases de Datos (¡CON CUIDADO!)
+
+**Eliminar tabla:**
+```sql
+-- ¡CUIDADO! Esto borra la tabla y todos sus datos
+DROP TABLE nombre_tabla;
+
+-- Ejemplo:
+DROP TABLE clientes_temp;
+```
+
+**Eliminar base de datos:**
+```sql
+-- ¡MUCHO CUIDADO! Borra toda la base de datos
+DROP DATABASE nombre_base_datos;
+
+-- Ejemplo:
+DROP DBABASE prueba_temp;
+```
+
+**Buenas prácticas:**
+1. Siempre hacer backup antes de eliminar
+2. Verificar dos veces el nombre
+3. Usar transacciones si es posible
+
+**Alternativa más segura:**
+```sql
+-- Primero verificar qué vamos a eliminar
+SHOW TABLES;
+SHOW DATABASES;
+
+-- Luego eliminar
+DROP TABLE IF EXISTS tabla_temp;  -- Sólo elimina si existe
+```
+
+## 🎯 EJERCICIOS PRÁCTICOS
+
+### Ejercicio 1: Crear Tabla de Estudiantes
+```sql
+CREATE TABLE estudiantes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    dni VARCHAR(10) UNIQUE NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
     fecha_nacimiento DATE,
-    peso DECIMAL(5,2),
-    vacunado BOOLEAN
+    email VARCHAR(150) UNIQUE,
+    telefono VARCHAR(15),
+    activo BOOLEAN DEFAULT TRUE
 );
 ```
 
----
-
-### **Ejercicio práctico 2**
-
-Agrega un registro de ejemplo a la tabla `mascotas`:
-
+### Ejercicio 2: Modificar la Tabla
 ```sql
-INSERT INTO mascotas (nombre, especie, fecha_nacimiento, peso, vacunado)
-VALUES ('Luna', 'Perro', '2021-05-10', 12.50, 1);
+-- Agregar columna
+ALTER TABLE estudiantes ADD COLUMN direccion TEXT;
+
+-- Modificar columna
+ALTER TABLE estudiantes MODIFY COLUMN telefono VARCHAR(20);
+
+-- Agregar restricción
+ALTER TABLE estudiantes ADD CONSTRAINT email_unico UNIQUE (email);
+
+-- Agregar columna con valor por defecto
+ALTER TABLE estudiantes ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;
 ```
 
-📌 Esto insertará:
+### Ejercicio 3: Insertar Datos con Diferentes Tipos
+```sql
+INSERT INTO estudiantes (dni, nombre, apellido, fecha_nacimiento, email, telefono)
+VALUES 
+('12345678A', 'María', 'Gómez', '2000-05-15', 'maria@email.com', '+34 600 111 222'),
+('87654321B', 'Pedro', 'López', '1999-12-20', 'pedro@email.com', '+34 600 333 444');
 
-| id\_mascota | nombre | especie | fecha\_nacimiento | peso  | vacunado |
-| ----------- | ------ | ------- | ----------------- | ----- | -------- |
-| 1           | Luna   | Perro   | 2021-05-10        | 12.50 | 1        |
+-- Verificar que auto_increment y defaults funcionan
+SELECT * FROM estudiantes;
+```
 
----
+## 📋 RESUMEN VISUAL
 
-Si quieres, puedo prepararte **la UNIDAD 2 completa en SQL** lista para importar en MySQL y que puedas probar todos los ejemplos en tu base de datos.
-¿Quieres que lo haga así para que lo tengas todo listo para ejecutar?
+```
+TABLAS EN MySQL
+│
+├── ESTRUCTURA
+│   ├── Campos (columnas) con tipos de datos
+│   ├── Filas (registros) con datos
+│   └── Restricciones (reglas)
+│
+├── TIPOS DE DATOS
+│   ├── INT, VARCHAR, TEXT, DATE, BOOLEAN...
+│   └── DECIMAL, FLOAT, DATETIME...
+│
+├── RESTRICCIONES
+│   ├── PRIMARY KEY (identificador único)
+│   ├── AUTO_INCREMENT (numeración automática)
+│   ├── NOT NULL (campo obligatorio)
+│   ├── UNIQUE (valores únicos)
+│   └── DEFAULT (valor por defecto)
+│
+└── MODIFICACIONES
+    ├── ALTER TABLE (agregar/modificar/eliminar columnas)
+    └── DROP TABLE/DATABASE (eliminar con cuidado)
+```
+
+## 🚀 PRÓXIMOS PASOS
+
+Ahora que sabes crear y modificar tablas, en la siguiente unidad aprenderemos:
+- Insertar datos en las tablas
+- Consultar y filtrar información
+- Actualizar y eliminar registros
