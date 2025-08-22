@@ -1,22 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>PetCenter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCenter - Gestión de Tienda de Mascotas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>PetCenter</h1>
-    <button onclick="cargarProductos()">Ver productos</button>
-    <div id="lista-productos"></div>
+    <header>
+        <h1>🐾 PetCenter - Gestión de Tienda de Mascotas</h1>
+        <nav>
+            <button class="nav-btn active" data-section="clientes">Clientes</button>
+            <button class="nav-btn" data-section="mascotas">Mascotas</button>
+            <button class="nav-btn" data-section="productos">Productos</button>
+            <button class="nav-btn" data-section="consultas">Consultas</button>
+        </nav>
+    </header>
 
-    <h2>Nuevo Pedido</h2>
-    <form id="pedidoForm">
-        Cliente ID: <input type="number" name="cliente_id"><br>
-        Producto ID: <input type="number" name="producto_id"><br>
-        Cantidad: <input type="number" name="cantidad"><br>
-        Precio: <input type="number" name="precio"><br>
-        <button type="submit">Registrar pedido</button>
-    </form>
+    <main>
+        <!-- Sección de Clientes -->
+        <section id="clientes" class="content-section active">
+            <h2>Gestión de Clientes</h2>
+            <div class="form-container">
+                <h3>Agregar Nuevo Cliente</h3>
+                <form id="clienteForm">
+                    <input type="text" id="clienteNombre" placeholder="Nombre" required>
+                    <input type="email" id="clienteEmail" placeholder="Email">
+                    <input type="tel" id="clienteTelefono" placeholder="Teléfono">
+                    <button type="submit">Guardar Cliente</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Lista de Clientes</h3>
+                <div id="clientesList"></div>
+            </div>
+        </section>
+
+        <!-- Sección de Mascotas -->
+        <section id="mascotas" class="content-section">
+            <h2>Gestión de Mascotas</h2>
+            <div class="form-container">
+                <h3>Agregar Nueva Mascota</h3>
+                <form id="mascotaForm">
+                    <input type="text" id="mascotaNombre" placeholder="Nombre" required>
+                    <input type="text" id="mascotaEspecie" placeholder="Especie">
+                    <input type="text" id="mascotaRaza" placeholder="Raza">
+                    <input type="number" id="mascotaEdad" placeholder="Edad">
+                    <select id="mascotaCliente" required>
+                        <option value="">Seleccionar dueño</option>
+                    </select>
+                    <button type="submit">Guardar Mascota</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Lista de Mascotas</h3>
+                <div id="mascotasList"></div>
+            </div>
+        </section>
+
+        <!-- Sección de Productos -->
+        <section id="productos" class="content-section">
+            <h2>Gestión de Productos</h2>
+            <div class="form-container">
+                <h3>Agregar Nuevo Producto</h3>
+                <form id="productoForm">
+                    <input type="text" id="productoNombre" placeholder="Nombre" required>
+                    <textarea id="productoDescripcion" placeholder="Descripción"></textarea>
+                    <input type="number" id="productoPrecio" placeholder="Precio" step="0.01" required>
+                    <input type="number" id="productoStock" placeholder="Stock" required>
+                    <select id="productoCategoria">
+                        <option value="">Seleccionar categoría</option>
+                        <option value="1">Alimentos</option>
+                        <option value="2">Juguetes</option>
+                        <option value="3">Medicamentos</option>
+                        <option value="4">Higiene</option>
+                        <option value="5">Accesorios</option>
+                    </select>
+                    <button type="submit">Guardar Producto</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Lista de Productos</h3>
+                <div id="productosList"></div>
+            </div>
+        </section>
+
+        <!-- Sección de Consultas -->
+        <section id="consultas" class="content-section">
+            <h2>Gestión de Consultas Veterinarias</h2>
+            <div class="form-container">
+                <h3>Registrar Nueva Consulta</h3>
+                <form id="consultaForm">
+                    <select id="consultaMascota" required>
+                        <option value="">Seleccionar mascota</option>
+                    </select>
+                    <select id="consultaVeterinario" required>
+                        <option value="">Seleccionar veterinario</option>
+                        <option value="1">Dra. Marta Gómez</option>
+                        <option value="2">Dr. Luis Romero</option>
+                        <option value="3">Dra. Carolina Díaz</option>
+                        <option value="4">Dr. Javier López</option>
+                    </select>
+                    <input type="date" id="consultaFecha" required>
+                    <textarea id="consultaDiagnostico" placeholder="Diagnóstico"></textarea>
+                    <textarea id="consultaTratamiento" placeholder="Tratamiento"></textarea>
+                    <input type="number" id="consultaCosto" placeholder="Costo" step="0.01">
+                    <button type="submit">Guardar Consulta</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Historial de Consultas</h3>
+                <div id="consultasList"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>PetCenter - Sistema de Gestión &copy; 2025</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
