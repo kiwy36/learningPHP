@@ -1,229 +1,365 @@
-# **UNIDAD 3 – OPERACIONES CRUD (BÁSICAS Y FUNDAMENTALES)**
+# 💾 UNIDAD 3 - OPERACIONES CRUD (BÁSICAS Y FUNDAMENTALES)
 
-CRUD significa **Create, Read, Update, Delete**, que son las cuatro operaciones básicas para manipular datos en una base de datos.
+¡Perfecto! Ahora vamos con lo más importante: cómo trabajar con los datos. Las operaciones CRUD (Create, Read, Update, Delete) son el corazón de cualquier aplicación con base de datos.
 
----
+## 3.1 INSERTAR DATOS
 
-## **3.1 Insertar datos**
+### 3a. Sintaxis INSERT INTO
 
----
-
-### **3a. Sintaxis `INSERT INTO`**
-
-Sirve para agregar registros nuevos en una tabla.
-La estructura básica es:
-
+**La estructura básica:**
 ```sql
 INSERT INTO nombre_tabla (columna1, columna2, columna3, ...)
 VALUES (valor1, valor2, valor3, ...);
 ```
 
-📌 Si insertas en **todas las columnas** y en el orden exacto, puedes omitir los nombres de columna:
+### 3b. Insertar Uno o Varios Registros
 
+**Insertar un solo registro:**
 ```sql
-INSERT INTO productos VALUES (1, 'Teclado', 1500.50, '2025-08-14', 1);
+INSERT INTO clientes (nombre, email, telefono, edad)
+VALUES ('Ana García', 'ana@email.com', '600111222', 25);
 ```
 
-⚠️ No es muy recomendable porque depende del orden exacto de las columnas.
-
----
-
-### **3b. Insertar uno o varios registros**
-
-**Uno solo:**
-
+**Insertar múltiples registros en un solo comando:**
 ```sql
-INSERT INTO productos (nombre, precio, fecha_creacion, en_stock)
-VALUES ('Mouse óptico', 900.00, '2025-08-14', 1);
-```
-
-**Varios a la vez:**
-
-```sql
-INSERT INTO productos (nombre, precio, fecha_creacion, en_stock)
+INSERT INTO clientes (nombre, email, telefono, edad)
 VALUES 
-('Monitor 24"', 45000.00, '2025-08-14', 1),
-('Parlantes', 3200.00, '2025-08-14', 0),
-('Silla gamer', 65000.00, '2025-08-14', 1);
+('Carlos López', 'carlos@email.com', '600333444', 30),
+('María Rodríguez', 'maria@email.com', '600555666', 28),
+('Pedro Sánchez', 'pedro@email.com', '600777888', 35);
 ```
 
----
-
-### **3c. Buenas prácticas para campos NULL o default**
-
-* Si un campo **puede ser NULL**, se puede omitir o poner `NULL`:
-
+**Ejemplo con tabla productos:**
 ```sql
-INSERT INTO productos (nombre, precio, fecha_creacion, en_stock)
-VALUES ('Pendrive 32GB', NULL, '2025-08-14', 1);
-```
-
-* Si un campo tiene **DEFAULT**, no es necesario especificarlo:
-
-```sql
-CREATE TABLE ejemplo (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    activo BOOLEAN DEFAULT 1
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10, 2),
+    stock INT DEFAULT 0,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-INSERT INTO ejemplo (nombre) VALUES ('Kevin'); -- activo será 1 automáticamente
+
+-- Insertar productos
+INSERT INTO productos (nombre, precio, stock)
+VALUES
+('Laptop HP', 899.99, 15),
+('Mouse Inalámbrico', 25.50, 100),
+('Teclado Mecánico', 89.99, 30),
+('Monitor 24"', 199.99, 20);
 ```
 
----
+### 3c. Buenas Prácticas para Campos NULL o DEFAULT
 
-## **3.2 Consultar datos**
-
----
-
-### **3a. `SELECT * FROM`**
-
-Sirve para **leer datos** de una tabla.
-
+**Cuando no especificamos todos los campos:**
 ```sql
-SELECT * FROM productos;
+-- Tabla con campos opcionales y defaults
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    activo BOOLEAN DEFAULT TRUE,
+    fecha_registro DATESTAMP DEFAULT CURRENT_DATE,
+    telefono VARCHAR(15) NULL,
+    direccion TEXT NULL
+);
+
+-- Insertar especificando sólo campos obligatorios
+INSERT INTO usuarios (username, email)
+VALUES ('anagarcia', 'ana@email.com');
+
+-- Insertar con algunos campos opcionales
+INSERT INTO usuarios (username, email, telefono)
+VALUES ('carlosl', 'carlos@email.com', '600111222');
+
+-- Ver resultado (los defaults se aplican automáticamente)
+SELECT * FROM usuarios;
 ```
 
-Esto devuelve **todas las columnas y registros**.
+## 3.2 CONSULTAR DATOS
 
----
+### 3a. SELECT * FROM
 
-### **3b. Filtrar con `WHERE`**
-
-Permite mostrar solo registros que cumplan una condición.
-
+**Consultar todos los registros y todas las columnas:**
 ```sql
-SELECT * FROM productos WHERE en_stock = 1;
+SELECT * FROM clientes;
 ```
 
-Operadores comunes:
-
-* `=` igual
-* `>` mayor que
-* `<` menor que
-* `<>` distinto
-* `BETWEEN x AND y` entre
-* `LIKE '%texto%'` búsqueda parcial
-
-Ejemplo:
-
+**Consultar columnas específicas:**
 ```sql
-SELECT * FROM productos WHERE precio BETWEEN 1000 AND 5000;
+SELECT nombre, email, telefono FROM clientes;
 ```
 
----
-
-### **3c. Ordenar con `ORDER BY`**
-
-Ordena los resultados:
-
+**Usar alias para columnas:**
 ```sql
-SELECT * FROM productos ORDER BY precio ASC; -- ascendente
-SELECT * FROM productos ORDER BY precio DESC; -- descendente
+SELECT 
+    nombre AS 'Nombre Completo',
+    email AS 'Correo Electrónico',
+    telefono AS 'Teléfono de Contacto'
+FROM clientes;
 ```
 
----
+### 3b. Filtrar con WHERE
 
-### **3d. Limitar resultados con `LIMIT`**
-
-Muestra solo cierta cantidad de filas:
-
+**Filtros básicos:**
 ```sql
-SELECT * FROM productos LIMIT 5; -- solo 5 resultados
+-- Clientes mayores de 25 años
+SELECT * FROM clientes WHERE edad > 25;
+
+-- Cliente con email específico
+SELECT * FROM clientes WHERE email = 'ana@email.com';
+
+-- Clientes que no tienen teléfono
+SELECT * FROM clientes WHERE telefono IS NULL;
 ```
 
-Con desplazamiento:
-
+**Múltiples condiciones:**
 ```sql
-SELECT * FROM productos LIMIT 5 OFFSET 10; -- desde la fila 11
+-- Clientes entre 25 y 35 años
+SELECT * FROM clientes WHERE edad BETWEEN 25 AND 35;
+
+-- Clientes de ciertas ciudades
+SELECT * FROM clientes WHERE ciudad IN ('Madrid', 'Barcelona', 'Valencia');
+
+-- Clientes que empiezan con 'A'
+SELECT * FROM clientes WHERE nombre LIKE 'A%';
+
+-- Combinar condiciones
+SELECT * FROM clientes 
+WHERE edad > 25 AND ciudad = 'Madrid' AND telefono IS NOT NULL;
 ```
 
----
+### 3c. Ordenar con ORDER BY
 
-## **3.3 Actualizar datos**
-
----
-
-### **3a. `UPDATE` con condición `WHERE`**
-
-Sirve para modificar datos existentes:
-
+**Ordenamiento simple:**
 ```sql
-UPDATE productos
-SET precio = 2000.00, en_stock = 0
-WHERE id_producto = 3;
+-- Ordenar por nombre (A-Z)
+SELECT * FROM clientes ORDER BY nombre ASC;
+
+-- Ordenar por edad (mayor a menor)
+SELECT * FROM clientes ORDER BY edad DESC;
 ```
 
----
-
-### **3b. Evitar errores: sin `WHERE` actualiza todo**
-
-⚠️ Este comando cambiaría TODAS las filas:
-
+**Ordenamiento múltiple:**
 ```sql
-UPDATE productos SET precio = 0; -- peligroso
+-- Primero por ciudad, luego por nombre alfabéticamente
+SELECT * FROM clientes ORDER BY ciudad ASC, nombre ASC;
+
+-- Productos más caros primero, luego por nombre
+SELECT * FROM productos ORDER BY precio DESC, nombre ASC;
 ```
 
-Siempre usa `WHERE` para limitar.
+### 3d. Limitar Resultados con LIMIT
 
----
-
-### **3c. Actualización masiva vs individual**
-
-* **Individual:**
-
+**Limitar cantidad de resultados:**
 ```sql
-UPDATE productos SET precio = 2500 WHERE id_producto = 2;
+-- Primeros 5 clientes
+SELECT * FROM clientes LIMIT 5;
+
+-- Clientes 6 al 10 (paginación)
+SELECT * FROM clientes LIMIT 5 OFFSET 5;
+-- o equivalente:
+SELECT * FROM clientes LIMIT 5, 5;
 ```
 
-* **Masiva:**
-
+**Combinar con ORDER BY:**
 ```sql
-UPDATE productos SET en_stock = 0 WHERE precio > 50000;
+-- Los 3 productos más caros
+SELECT * FROM productos ORDER BY precio DESC LIMIT 3;
+
+-- Los 5 clientes más jóvenes
+SELECT * FROM clientes ORDER BY edad ASC LIMIT 5;
 ```
 
----
+## 3.3 ACTUALIZAR DATOS
 
-## **3.4 Eliminar datos**
+### 3a. UPDATE con Condición WHERE
 
----
-
-### **3a. `DELETE FROM` con `WHERE`**
-
-Elimina registros:
-
+**Sintaxis básica:**
 ```sql
-DELETE FROM productos WHERE id_producto = 5;
+UPDATE nombre_tabla
+SET columna1 = nuevo_valor1, columna2 = nuevo_valor2, ...
+WHERE condición;
 ```
 
----
-
-### **3b. Eliminar todos los registros**
-
+**Ejemplos prácticos:**
 ```sql
-DELETE FROM productos;
+-- Actualizar el teléfono de un cliente específico
+UPDATE clientes 
+SET telefono = '611222333' 
+WHERE email = 'ana@email.com';
+
+-- Aumentar el precio de todos los productos en un 10%
+UPDATE productos 
+SET precio = precio * 1.10;
+
+-- Cambiar el estado de varios clientes
+UPDATE clientes 
+SET activo = FALSE 
+WHERE fecha_ultima_compra < '2023-01-01';
 ```
 
-⚠️ Esto borra todos los datos pero **mantiene la estructura**.
+### 3b. Evitar Errores: Sin WHERE Borra Todo
 
----
-
-### **3c. `TRUNCATE` vs `DELETE`**
-
-* `DELETE` → Borra datos pero mantiene auto\_increment.
-* `TRUNCATE` → Borra todo y reinicia auto\_increment.
-
+**¡PELIGRO! Sin WHERE se actualizan TODOS los registros:**
 ```sql
-TRUNCATE TABLE productos;
+-- ¡CUIDADO! Esto cambia el teléfono de TODOS los clientes
+UPDATE clientes SET telefono = '600000000';
+
+-- Siempre verificar el WHERE primero con SELECT
+SELECT * FROM clientes WHERE email = 'ana@email.com'; -- Verificar
+UPDATE clientes SET telefono = '611222333' WHERE email = 'ana@email.com'; -- Ejecutar
 ```
 
----
+### 3c. Actualización Masiva vs Individual
 
-## **Ejercicio práctico final**
+**Actualización individual:**
+```sql
+-- Por ID (la forma más segura)
+UPDATE productos SET stock = 50 WHERE id = 1;
 
-1. **Insertar** tres productos con nombre, precio, fecha y stock.
-2. **Consultar** todos los productos con precio mayor a 3000 ordenados de mayor a menor.
-3. **Actualizar** el precio de un producto específico.
-4. **Eliminar** un producto usando su ID.
+-- Por campo único
+UPDATE usuarios SET activo = FALSE WHERE username = 'usuario_inactivo';
+```
 
----
-dsaidjiasjdiajd
+**Actualización masiva:**
+```sql
+-- Reactivar todos los clientes inactivos de Madrid
+UPDATE clientes 
+SET activo = TRUE 
+WHERE ciudad = 'Madrid' AND activo = FALSE;
+
+-- Aplicar descuento a productos de una categoría
+UPDATE productos 
+SET precio = precio * 0.9  -- 10% de descuento
+WHERE categoria = 'Electrónicos';
+```
+
+## 3.4 ELIMINAR DATOS
+
+### 3a. DELETE FROM con WHERE
+
+**Eliminar registros específicos:**
+```sql
+DELETE FROM nombre_tabla WHERE condición;
+```
+
+**Ejemplos:**
+```sql
+-- Eliminar un cliente específico
+DELETE FROM clientes WHERE id = 5;
+
+-- Eliminar productos sin stock
+DELETE FROM productos WHERE stock = 0;
+
+-- Eliminar usuarios inactivos hace más de 1 año
+DELETE FROM usuarios 
+WHERE activo = FALSE AND ultima_conexion < '2023-01-01';
+```
+
+### 3b. Eliminar Todos los Registros
+
+**¡MUCHO CUIDADO! Estas opciones eliminan TODO:**
+```sql
+-- Elimina todos los registros pero mantiene la estructura
+DELETE FROM clientes;
+
+-- Más rápido, también elimina todo
+TRUNCATE TABLE clientes;
+```
+
+### 3c. Truncar Tabla vs Eliminar Registros
+
+**DELETE FROM:**
+- Elimina registros uno por uno
+- Se puede usar con WHERE
+- Se pueden recuperar con ROLLBACK (en transacciones)
+- Más lento en tablas grandes
+
+**TRUNCATE TABLE:**
+- Elimina todos los registros de golpe
+- No se puede usar con WHERE
+- No se puede recuperar
+- Más rápido y libera espacio
+- Reinicia los auto_increment
+
+**Comparación:**
+```sql
+-- DELETE (más control)
+DELETE FROM log_errores WHERE fecha < '2023-01-01'; -- Eliminar sólo algunos
+
+-- TRUNCATE (más rápido para limpiar toda la tabla)
+TRUNCATE TABLE temp_data; -- Eliminar todo rápidamente
+```
+
+## 🎯 EJERCICIOS PRÁCTICOS
+
+### Ejercicio 1: Insertar y Consultar
+```sql
+-- Crear tabla
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    departamento VARCHAR(50),
+    salario DECIMAL(10, 2),
+    fecha_contratacion DATE
+);
+
+-- Insertar datos
+INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion)
+VALUES
+('Ana García', 'Ventas', 35000.00, '2022-03-15'),
+('Carlos López', 'IT', 45000.00, '2021-06-10'),
+('María Rodríguez', 'Ventas', 32000.00, '2023-01-20'),
+('Pedro Sánchez', 'Marketing', 38000.00, '2020-11-05');
+
+-- Consultas
+SELECT * FROM empleados WHERE departamento = 'Ventas';
+SELECT nombre, salario FROM empleados ORDER BY salario DESC;
+SELECT * FROM empleados WHERE salario > 35000 LIMIT 2;
+```
+
+### Ejercicio 2: Actualizar y Eliminar
+```sql
+-- Aumentar salario a empleados de Ventas
+UPDATE empleados 
+SET salario = salario * 1.10 
+WHERE departamento = 'Ventas';
+
+-- Cambiar departamento
+UPDATE empleados 
+SET departamento = 'Digital' 
+WHERE nombre = 'Pedro Sánchez';
+
+-- Eliminar empleados con salario muy bajo
+DELETE FROM empleados WHERE salario < 30000;
+
+-- Ver resultados
+SELECT * FROM empleados;
+```
+
+## 📋 RESUMEN VISUAL CRUD
+
+```
+OPERACIONES CRUD
+│
+├── CREATE (Crear)
+│   └── INSERT INTO → Agregar nuevos registros
+│
+├── READ (Leer)
+│   └── SELECT → Consultar datos con filtros, orden y límites
+│
+├── UPDATE (Actualizar)
+│   └── UPDATE → Modificar registros existentes (¡SIEMPRE con WHERE!)
+│
+└── DELETE (Eliminar)
+    └── DELETE → Eliminar registros (¡SIEMPRE con WHERE!)
+    └── TRUNCATE → Vaciar tabla completamente
+```
+
+## 🚀 PRÓXIMOS PASOS
+
+Ahora dominas las operaciones básicas CRUD. En la siguiente unidad aprenderemos:
+- Consultas más avanzadas con JOINs
+- Funciones de agregación (COUNT, SUM, AVG)
+- Agrupamiento de datos con GROUP BY
+- Consultas complejas con subconsultas
