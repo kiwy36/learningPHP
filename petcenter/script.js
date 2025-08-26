@@ -53,7 +53,7 @@ function loadSectionData(section) {
 
 // Funciones para cargar datos
 function loadClientes() {
-    fetch('php/clientes.php?action=get')
+    fetch('./php/clientes.php?action=get')
         .then(response => response.json())
         .then(data => {
             const clientesList = document.getElementById('clientesList');
@@ -96,7 +96,7 @@ function loadClientes() {
 }
 
 function loadMascotas() {
-    fetch('php/mascotas.php?action=get')
+    fetch('./php/mascotas.php?action=get')
         .then(response => response.json())
         .then(data => {
             const mascotasList = document.getElementById('mascotasList');
@@ -141,7 +141,7 @@ function loadMascotas() {
 }
 
 function loadMascotasOptions() {
-    fetch('php/mascotas.php?action=get')
+    fetch('./php/mascotas.php?action=get')
         .then(response => response.json())
         .then(data => {
             if (!data.error) {
@@ -159,7 +159,7 @@ function loadMascotasOptions() {
 }
 
 function loadProductos() {
-    fetch('php/productos.php?action=get')
+    fetch('./php/productos.php?action=get')
         .then(response => response.json())
         .then(data => {
             const productosList = document.getElementById('productosList');
@@ -204,7 +204,7 @@ function loadProductos() {
 }
 
 function loadConsultas() {
-    fetch('php/consultas.php?action=get')
+    fetch('./php/consultas.php?action=get')
         .then(response => response.json())
         .then(data => {
             const consultasList = document.getElementById('consultasList');
@@ -258,7 +258,7 @@ function handleClienteSubmit(e) {
         telefono: document.getElementById('clienteTelefono').value
     };
     
-    fetch('php/clientes.php?action=create', {
+    fetch('./php/clientes.php?action=create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -291,7 +291,7 @@ function handleMascotaSubmit(e) {
         cliente_id: document.getElementById('mascotaCliente').value
     };
     
-    fetch('php/mascotas.php?action=create', {
+    fetch('./php/mascotas.php?action=create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -324,7 +324,7 @@ function handleProductoSubmit(e) {
         categoria_id: document.getElementById('productoCategoria').value
     };
     
-    fetch('php/productos.php?action=create', {
+    fetch('./php/productos.php?action=create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -358,7 +358,7 @@ function handleConsultaSubmit(e) {
         costo: document.getElementById('consultaCosto').value
     };
     
-    fetch('php/consultas.php?action=create', {
+    fetch('./php/consultas.php?action=create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
