@@ -1,0 +1,374 @@
+# 🔍 UNIDAD 4 – FILTROS Y BÚSQUEDAS AVANZADAS
+
+## 4.1 OPERADORES Y CONDICIONES
+
+### 4a. Comparadores: =, >, <, !=
+
+**Los comparadores básicos pero esenciales:**
+
+```sql
+-- Igualdad
+SELECT * FROM productos WHERE precio = 99.99;
+
+-- Mayor que
+SELECT * FROM empleados WHERE salario > 50000;
+
+-- Menor que
+SELECT * FROM estudiantes WHERE edad < 25;
+
+-- Mayor o igual que
+SELECT * FROM pedidos WHERE total >= 1000;
+
+-- Menor o igual que
+SELECT * FROM productos WHERE stock <= 10;
+
+-- Diferente de (!= o <>)
+SELECT * FROM clientes WHERE ciudad != 'Madrid';
+SELECT * FROM clientes WHERE ciudad <> 'Barcelona';
+```
+
+**Ejemplos prácticos:**
+```sql
+-- Productos entre 50 y 100 euros
+SELECT nombre, precio 
+FROM productos 
+WHERE precio >= 50 AND precio <= 100;
+
+-- Empleados que no son del departamento de Ventas
+SELECT nombre, departamento 
+FROM empleados 
+WHERE departamento != 'Ventas';
+
+-- Clientes menores de 30 años
+SELECT nombre, edad 
+FROM clientes 
+WHERE edad < 30;
+```
+
+### 4b. Lógicos: AND, OR, NOT
+
+**Combinando condiciones para consultas más precisas:**
+
+```sql
+-- AND (todas las condiciones deben ser verdaderas)
+SELECT * FROM productos 
+WHERE precio > 50 AND stock > 0;
+
+-- OR (al menos una condición debe ser verdadera)
+SELECT * FROM clientes 
+WHERE ciudad = 'Madrid' OR ciudad = 'Barcelona';
+
+-- NOT (niega la condición)
+SELECT * FROM empleados 
+WHERE NOT departamento = 'IT';
+
+-- Combinaciones complejas
+SELECT * FROM pedidos 
+WHERE (total > 1000 OR cliente_id = 5) 
+AND fecha >= '2024-01-01';
+```
+
+**Ejemplos con paréntesis para agrupar condiciones:**
+```sql
+-- Clientes de Madrid o Barcelona mayores de 25 años
+SELECT * FROM clientes 
+WHERE (ciudad = 'Madrid' OR ciudad = 'Barcelona') 
+AND edad > 25;
+
+-- Productos electrónicos con precio alto o stock bajo
+SELECT * FROM productos 
+WHERE categoria = 'Electrónicos' 
+AND (precio > 500 OR stock < 5);
+```
+
+### 4c. BETWEEN, IN, LIKE, IS NULL
+
+**BETWEEN - Para rangos de valores:**
+```sql
+-- Entre dos valores (inclusive)
+SELECT * FROM productos WHERE precio BETWEEN 50 AND 100;
+
+-- Equivale a:
+SELECT * FROM productos WHERE precio >= 50 AND precio <= 100;
+
+-- Fechas en un rango
+SELECT * FROM pedidos 
+WHERE fecha BETWEEN '2024-01-01' AND '2024-01-31';
+```
+
+**IN - Para múltiples valores específicos:**
+```sql
+-- Ciudades específicas
+SELECT * FROM clientes 
+WHERE ciudad IN ('Madrid', 'Barcelona', 'Valencia');
+
+-- Equivale a:
+SELECT * FROM clientes 
+WHERE ciudad = 'Madrid' OR ciudad = 'Barcelona' OR ciudad = 'Valencia';
+
+-- IDs específicos
+SELECT * FROM productos 
+WHERE id IN (1, 5, 8, 12);
+```
+
+**LIKE - Para búsquedas de texto con patrones:**
+```sql
+-- % representa cualquier cantidad de caracteres
+-- _ representa un solo carácter
+
+-- Empieza con 'A'
+SELECT * FROM clientes WHERE nombre LIKE 'A%';
+
+-- Termina con 'ez'
+SELECT * FROM clientes WHERE nombre LIKE '%ez';
+
+-- Contiene 'mar'
+SELECT * FROM productos WHERE nombre LIKE '%mar%';
+
+-- Exactamente 5 caracteres que empiezan con 'A'
+SELECT * FROM clientes WHERE nombre LIKE 'A____';
+
+-- Segunda letra es 'a'
+SELECT * FROM clientes WHERE nombre LIKE '_a%';
+```
+
+**IS NULL - Para valores nulos:**
+```sql
+-- Clientes sin teléfono
+SELECT * FROM clientes WHERE telefono IS NULL;
+
+-- Productos sin descripción
+SELECT * FROM productos WHERE descripcion IS NOT NULL;
+
+-- Pedidos sin fecha de entrega
+SELECT * FROM pedidos WHERE fecha_entrega IS NULL;
+```
+
+## 4.2 FUNCIONES ÚTILES EN CONSULTAS
+
+### 4a. COUNT(), MAX(), MIN(), SUM(), AVG()
+
+**Funciones de agregación para análisis de datos:**
+
+```sql
+-- COUNT() - Contar registros
+SELECT COUNT(*) AS total_clientes FROM clientes;
+SELECT COUNT(*) AS clientes_madrid FROM clientes WHERE ciudad = 'Madrid';
+
+-- MAX() - Valor máximo
+SELECT MAX(precio) AS precio_maximo FROM productos;
+SELECT MAX(fecha_nacimiento) FROM empleados; -- Persona más joven
+
+-- MIN() - Valor mínimo
+SELECT MIN(precio) AS precio_minimo FROM productos;
+SELECT MIN(fecha_contratacion) FROM empleados; -- Empleado más antiguo
+
+-- SUM() - Suma de valores
+SELECT SUM(total) AS ventas_totales FROM pedidos;
+SELECT SUM(stock) AS inventario_total FROM productos;
+
+-- AVG() - Promedio de valores
+SELECT AVG(precio) AS precio_promedio FROM productos;
+SELECT AVG(edad) AS edad_promedia FROM clientes;
+```
+
+**Ejemplos combinados:**
+```sql
+-- Estadísticas completas de productos
+SELECT 
+    COUNT(*) AS total_productos,
+    MIN(precio) AS precio_minimo,
+    MAX(precio) AS precio_maximo,
+    AVG(precio) AS precio_promedio,
+    SUM(stock) AS inventario_total
+FROM productos;
+```
+
+### 4b. Agrupar con GROUP BY
+
+**Agrupar resultados por categorías:**
+
+```sql
+-- Ventas totales por cliente
+SELECT cliente_id, SUM(total) AS total_compras
+FROM pedidos
+GROUP BY cliente_id;
+
+-- Cantidad de productos por categoría
+SELECT categoria, COUNT(*) AS cantidad_productos
+FROM productos
+GROUP BY categoria;
+
+-- Promedio de salario por departamento
+SELECT departamento, AVG(salario) AS salario_promedio
+FROM empleados
+GROUP BY departamento;
+
+-- Múltiples agrupaciones
+SELECT departamento, cargo, AVG(salario) AS salario_promedio
+FROM empleados
+GROUP BY departamento, cargo;
+```
+
+**Ejemplos prácticos:**
+```sql
+-- Productos por categoría con estadísticas
+SELECT 
+    categoria,
+    COUNT(*) AS cantidad,
+    MIN(precio) AS precio_min,
+    MAX(precio) AS precio_max,
+    AVG(precio) AS precio_promedio
+FROM productos
+GROUP BY categoria
+ORDER BY cantidad DESC;
+
+-- Ventas mensuales
+SELECT 
+    YEAR(fecha) AS año,
+    MONTH(fecha) AS mes,
+    COUNT(*) AS total_pedidos,
+    SUM(total) AS ventas_totales
+FROM pedidos
+GROUP BY YEAR(fecha), MONTH(fecha)
+ORDER BY año, mes;
+```
+
+### 4c. Filtrar grupos con HAVING
+
+**HAVING vs WHERE:**
+- **WHERE** filtra registros antes de agrupar
+- **HAVING** filtra grupos después de agrupar
+
+```sql
+-- Categorías con más de 5 productos
+SELECT categoria, COUNT(*) AS cantidad
+FROM productos
+GROUP BY categoria
+HAVING COUNT(*) > 5;
+
+-- Clientes que han gastado más de 1000€
+SELECT cliente_id, SUM(total) AS total_gastado
+FROM pedidos
+GROUP BY cliente_id
+HAVING SUM(total) > 1000;
+
+-- Departamentos con salario promedio mayor a 40000
+SELECT departamento, AVG(salario) AS salario_promedio
+FROM empleados
+GROUP BY departamento
+HAVING AVG(salario) > 40000;
+```
+
+**Ejemplos combinando WHERE y HAVING:**
+```sql
+-- Categorías con promedio de precio > 50 (sólo productos activos)
+SELECT categoria, AVG(precio) AS precio_promedio
+FROM productos
+WHERE activo = TRUE  -- Filtra antes de agrupar
+GROUP BY categoria
+HAVING AVG(precio) > 50;  -- Filtra después de agrupar
+
+-- Ventas por cliente en 2024 (sólo clientes con más de 3 pedidos)
+SELECT 
+    cliente_id, 
+    COUNT(*) AS total_pedidos,
+    SUM(total) AS total_ventas
+FROM pedidos
+WHERE YEAR(fecha) = 2024  -- Sólo pedidos de 2024
+GROUP BY cliente_id
+HAVING COUNT(*) > 3;  -- Sólo clientes con más de 3 pedidos
+```
+
+## 🎯 EJERCICIOS PRÁCTICOS COMPLETOS
+
+### Ejercicio 1: Análisis de Ventas
+```sql
+-- Crear tabla de ventas
+CREATE TABLE ventas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    producto_id INT,
+    cantidad INT,
+    precio_unitario DECIMAL(10, 2),
+    fecha DATE,
+    vendedor_id INT
+);
+
+-- Insertar datos de ejemplo
+INSERT INTO ventas (producto_id, cantidad, precio_unitario, fecha, vendedor_id) VALUES
+(1, 2, 50.00, '2024-01-15', 101),
+(2, 1, 120.00, '2024-01-15', 102),
+(1, 3, 50.00, '2024-01-16', 101),
+(3, 2, 75.00, '2024-01-16', 103),
+(2, 1, 120.00, '2024-01-17', 102);
+
+-- Consultas de análisis
+-- 1. Ventas totales por día
+SELECT fecha, SUM(cantidad * precio_unitario) AS ventas_totales
+FROM ventas
+GROUP BY fecha
+ORDER BY fecha;
+
+-- 2. Mejor vendedor del mes
+SELECT vendedor_id, SUM(cantidad * precio_unitario) AS total_ventas
+FROM ventas
+WHERE MONTH(fecha) = 1 AND YEAR(fecha) = 2024
+GROUP BY vendedor_id
+ORDER BY total_ventas DESC
+LIMIT 1;
+
+-- 3. Productos que han vendido más de 3 unidades
+SELECT producto_id, SUM(cantidad) AS total_vendido
+FROM ventas
+GROUP BY producto_id
+HAVING SUM(cantidad) > 3;
+```
+
+### Ejercicio 2: Análisis de Empleados
+```sql
+-- Consultas complejas
+SELECT 
+    departamento,
+    COUNT(*) AS total_empleados,
+    MIN(salario) AS salario_minimo,
+    MAX(salario) AS salario_maximo,
+    AVG(salario) AS salario_promedio,
+    SUM(salario) AS masa_salarial
+FROM empleados
+WHERE activo = TRUE
+GROUP BY departamento
+HAVING AVG(salario) > 30000
+ORDER BY salario_promedio DESC;
+```
+
+## 📊 RESUMEN VISUAL DE FUNCIONES
+
+```
+FUNCIONES DE AGREGACIÓN
+│
+├── COUNT() → Conteo de registros
+├── SUM() → Suma de valores
+├── AVG() → Promedio de valores
+├── MAX() → Valor máximo
+└── MIN() → Valor mínimo
+
+CLAÚSULAS DE AGRUPAMIENTO
+│
+├── GROUP BY → Agrupar por categorías
+└── HAVING → Filtrar grupos (después de agrupar)
+
+OPERADORES AVANZADOS
+│
+├── BETWEEN → Rangos de valores
+├── IN → Múltiples valores específicos
+├── LIKE → Búsquedas de texto con patrones
+└── IS NULL → Valores nulos
+```
+
+## 🚀 PRÓXIMOS PASOS
+
+Ahora tienes herramientas poderosas para análisis de datos. En la siguiente unidad aprenderemos:
+- **JOINS** para combinar datos de múltiples tablas
+- **Subconsultas** avanzadas
+- **Vistas** para simplificar consultas complejas
+- **Funciones** personalizadas
