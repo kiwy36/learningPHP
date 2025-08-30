@@ -372,4 +372,3 @@ Ahora tienes herramientas poderosas para análisis de datos. En la siguiente uni
 - **Subconsultas** avanzadas
 - **Vistas** para simplificar consultas complejas
 - **Funciones** personalizadas
-franco fallido dia de relectura muy cansado
