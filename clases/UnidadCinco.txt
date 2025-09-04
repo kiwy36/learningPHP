@@ -1,0 +1,368 @@
+# 🔗 UNIDAD 5 – RELACIONES ENTRE TABLAS
+
+¡Perfecto! Ahora vamos a explorar el corazón de las bases de datos relacionales: cómo conectar tablas entre sí para crear sistemas robustos y organizados.
+
+## 5.1 CLAVES FORÁNEAS (FOREIGN KEY)
+
+### 5a. ¿Qué es una Relación entre Tablas?
+
+**Analogía: Sistema de biblioteca**
+- **Tabla Libros**: Información de cada libro
+- **Tabla Autores**: Información de cada autor
+- **Relación**: Un autor puede escribir muchos libros
+
+**Concepto:**
+Una relación es un vínculo entre dos tablas usando una clave foránea que referencia una clave primaria en otra tabla.
+
+**Ejemplo básico:**
+```sql
+-- Tabla principal (padre)
+CREATE TABLE autores (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    pais VARCHAR(50)
+);
+
+-- Tabla relacionada (hijo)
+CREATE TABLE libros (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(200) NOT NULL,
+    año_publicacion INT,
+    autor_id INT,  -- Esta será nuestra clave foránea
+    FOREIGN KEY (autor_id) REFERENCES autores(id)
+);
+```
+
+### 5b. Tipos de Relaciones
+
+**1. Uno a Uno (1:1)**
+- Un registro en la tabla A se relaciona con UN solo registro en la tabla B
+- Ejemplo: Usuario ↔ Perfil (cada usuario tiene un perfil)
+
+```sql
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE perfiles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT UNIQUE,  -- UNIQUE asegura relación 1:1
+    nombre VARCHAR(100),
+    fecha_nacimiento DATE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+```
+
+**2. Uno a Muchos (1:N)**
+- Un registro en la tabla A se relaciona con MUCHOS registros en la tabla B
+- Ejemplo: Autor ↔ Libros (un autor escribe muchos libros)
+
+```sql
+CREATE TABLE categorias (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(200) NOT NULL,
+    precio DECIMAL(10, 2),
+    categoria_id INT,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+```
+
+**3. Muchos a Muchos (N:M)**
+- Muchos registros en la tabla A se relacionan con muchos registros en la tabla B
+- Requiere una **tabla intermedia/pivote**
+- Ejemplo: Estudiantes ↔ Cursos (un estudiante toma muchos cursos, un curso tiene muchos estudiantes)
+
+```sql
+CREATE TABLE estudiantes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE cursos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Tabla intermedia para relación N:M
+CREATE TABLE estudiantes_cursos (
+    estudiante_id INT,
+    curso_id INT,
+    fecha_inscripcion DATE,
+    calificación DECIMAL(4, 2),
+    PRIMARY KEY (estudiante_id, curso_id),  -- Clave compuesta
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+    FOREIGN KEY (curso_id) REFERENCES cursos(id)
+);
+```
+
+### 5c. Declaración y Restricciones (ON DELETE, ON UPDATE)
+
+**Sintaxis completa de FOREIGN KEY:**
+```sql
+FOREIGN KEY (columna_local) 
+REFERENCES tabla_externa(columna_externa)
+[ON DELETE acción]
+[ON UPDATE acción]
+```
+
+**Opciones de ON DELETE y ON UPDATE:**
+
+| Acción       | Descripción |
+|-------------|-------------|
+| **RESTRICT** | Rechaza la operación (por defecto) |
+| **CASCADE** | Propaga la operación (elimina/actualiza en cascada) |
+| **SET NULL** | Establece NULL en la clave foránea |
+| **NO ACTION** | Similar a RESTRICT |
+| **SET DEFAULT** | Establece el valor por defecto |
+
+**Ejemplos prácticos:**
+
+```sql
+-- 1. RESTRICT (por defecto) - Previene eliminación
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cliente_id INT,
+    total DECIMAL(10, 2),
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+    -- ON DELETE RESTRICT por defecto
+);
+
+-- 2. CASCADE - Elimina/actualiza en cascada
+CREATE TABLE lineas_pedido (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pedido_id INT,
+    producto_id INT,
+    cantidad INT,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE RESTRICT
+);
+
+-- 3. SET NULL - Establece NULL si se elimina el padre
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    jefe_id INT,  -- Auto-referencia
+    nombre VARCHAR(100),
+    FOREIGN KEY (jefe_id) REFERENCES empleados(id) ON DELETE SET NULL
+);
+```
+
+## 5.2 JOINS (COMBINACIONES DE TABLAS)
+
+### 5a. INNER JOIN: Datos Relacionados
+
+**Sólo muestra registros que tienen coincidencias en ambas tablas**
+
+```sql
+-- Sintaxis básica
+SELECT columnas
+FROM tabla1
+INNER JOIN tabla2 ON tabla1.columna = tabla2.columna;
+
+-- Ejemplo: Libros con sus autores
+SELECT 
+    l.titulo AS libro,
+    l.año_publicacion AS año,
+    a.nombre AS autor,
+    a.pais AS nacionalidad
+FROM libros l
+INNER JOIN autores a ON l.autor_id = a.id;
+
+-- Ejemplo: Productos con su categoría
+SELECT 
+    p.nombre AS producto,
+    p.precio,
+    c.nombre AS categoria
+FROM productos p
+INNER JOIN categorias c ON p.categoria_id = c.id;
+```
+
+### 5b. LEFT JOIN, RIGHT JOIN: Incluir Datos aunque Falten
+
+**LEFT JOIN: Todos los registros de la tabla izquierda + coincidencias de la derecha**
+```sql
+-- Todos los autores, incluso los que no tienen libros
+SELECT 
+    a.nombre AS autor,
+    a.pais,
+    l.titulo AS libro
+FROM autores a
+LEFT JOIN libros l ON a.id = l.autor_id;
+
+-- Clientes y sus pedidos (incluyendo clientes sin pedidos)
+SELECT 
+    c.nombre AS cliente,
+    c.email,
+    p.fecha AS fecha_pedido,
+    p.total
+FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.cliente_id;
+```
+
+**RIGHT JOIN: Todos los registros de la tabla derecha + coincidencias de la izquierda**
+```sql
+-- Todos los libros, incluso los que no tienen autor asignado
+SELECT 
+    l.titulo AS libro,
+    a.nombre AS autor
+FROM autores a
+RIGHT JOIN libros l ON a.id = l.autor_id;
+```
+
+### 5c. FULL JOIN (Simulado en MySQL)
+
+**MySQL no tiene FULL JOIN nativo, pero se puede simular:**
+```sql
+-- Simular FULL JOIN con UNION de LEFT y RIGHT JOIN
+SELECT 
+    a.nombre AS autor,
+    l.titulo AS libro
+FROM autores a
+LEFT JOIN libros l ON a.id = l.autor_id
+
+UNION
+
+SELECT 
+    a.nombre AS autor,
+    l.titulo AS libro
+FROM autores a
+RIGHT JOIN libros l ON a.id = l.autor_id;
+```
+
+### 5d. Alias de Tablas (AS) y Legibilidad
+
+**Mejoran la legibilidad y reducen la escritura:**
+```sql
+-- Sin alias (menos legible)
+SELECT 
+    productos.nombre,
+    productos.precio,
+    categorias.nombre
+FROM productos
+INNER JOIN categorias ON productos.categoria_id = categorias.id;
+
+-- Con alias (más legible)
+SELECT 
+    p.nombre AS producto,
+    p.precio,
+    c.nombre AS categoria
+FROM productos p  -- Alias 'p' para productos
+INNER JOIN categorias c ON p.categoria_id = c.id;  -- Alias 'c' para categorias
+
+-- Ejemplo complejo con múltiples joins
+SELECT 
+    e.nombre AS empleado,
+    d.nombre AS departamento,
+    j.nombre AS jefe,
+    p.nombre AS proyecto
+FROM empleados e
+INNER JOIN departamentos d ON e.departamento_id = d.id
+LEFT JOIN empleados j ON e.jefe_id = j.id
+INNER JOIN empleados_proyectos ep ON e.id = ep.empleado_id
+INNER JOIN proyectos p ON ep.proyecto_id = p.id;
+```
+
+## 🎯 EJERCICIOS PRÁCTICOS COMPLETOS
+
+### Ejercicio 1: Sistema de Biblioteca
+```sql
+-- Crear tablas relacionadas
+CREATE TABLE autores (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    nacionalidad VARCHAR(50)
+);
+
+CREATE TABLE libros (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(200) NOT NULL,
+    isbn VARCHAR(20),
+    año INT,
+    autor_id INT,
+    FOREIGN KEY (autor_id) REFERENCES autores(id) ON DELETE CASCADE
+);
+
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE prestamos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    libro_id INT,
+    usuario_id INT,
+    fecha_prestamo DATE,
+    fecha_devolucion DATE,
+    FOREIGN KEY (libro_id) REFERENCES libros(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+-- Consultas con JOINs
+-- 1. Libros con sus autores
+SELECT l.titulo, l.año, a.nombre AS autor
+FROM libros l
+INNER JOIN autores a ON l.autor_id = a.id;
+
+-- 2. Préstamos actuales con información completa
+SELECT 
+    u.nombre AS usuario,
+    l.titulo AS libro,
+    a.nombre AS autor,
+    p.fecha_prestamo,
+    p.fecha_devolucion
+FROM prestamos p
+INNER JOIN libros l ON p.libro_id = l.id
+INNER JOIN autores a ON l.autor_id = a.id
+INNER JOIN usuarios u ON p.usuario_id = u.id
+WHERE p.fecha_devolucion IS NULL;
+
+-- 3. Autores sin libros publicados
+SELECT a.nombre, a.nacionalidad
+FROM autores a
+LEFT JOIN libros l ON a.id = l.autor_id
+WHERE l.id IS NULL;
+```
+
+### Ejercicio 2: Sistema de Compras
+```sql
+-- Consultas avanzadas con múltiples JOINs
+SELECT 
+    c.nombre AS cliente,
+    p.fecha AS fecha_pedido,
+    pr.nombre AS producto,
+    lp.cantidad,
+    lp.precio_unitario,
+    (lp.cantidad * lp.precio_unitario) AS subtotal
+FROM clientes c
+INNER JOIN pedidos p ON c.id = p.cliente_id
+INNER JOIN lineas_pedido lp ON p.id = lp.pedido_id
+INNER JOIN productos pr ON lp.producto_id = pr.id
+WHERE p.fecha BETWEEN '2024-01-01' AND '2024-01-31'
+ORDER BY p.fecha, c.nombre;
+```
+
+## 📊 RESUMEN VISUAL DE JOINS
+
+```
+TIPO DE JOIN         | RESULTADO
+─────────────────────|─────────────────────────────────────────────────
+INNER JOIN           | Sólo registros con coincidencias en ambas tablas
+LEFT JOIN            | Todos de la izquierda + coincidencias derecha
+RIGHT JOIN           | Todos de la derecha + coincidencias izquierda
+FULL JOIN (simulado) | Todos los registros de ambas tablas
+```
+
+## 🚀 PRÓXIMOS PASOS
+
+Ahora entiendes las relaciones entre tablas. En la siguiente unidad aprenderemos:
+- **Subconsultas** avanzadas (queries dentro de queries)
+- **Vistas** para simplificar consultas complejas
+- **Funciones** personalizadas y stored procedures
+- **Triggers** para automatizar acciones
