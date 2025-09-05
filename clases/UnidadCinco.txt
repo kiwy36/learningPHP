@@ -366,3 +366,4 @@ Ahora entiendes las relaciones entre tablas. En la siguiente unidad aprenderemos
 - **Vistas** para simplificar consultas complejas
 - **Funciones** personalizadas y stored procedures
 - **Triggers** para automatizar acciones
+asdadad
