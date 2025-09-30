@@ -365,4 +365,4 @@ Ahora entiendes las relaciones entre tablas. En la siguiente unidad aprenderemos
 - **Subconsultas** avanzadas (queries dentro de queries)
 - **Vistas** para simplificar consultas complejas
 - **Funciones** personalizadas y stored procedures
-- **Triggers** para automatizar acciones
+- **Triggers** para automatizar accionessadaddsadsadsad
